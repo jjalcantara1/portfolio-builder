@@ -26,8 +26,10 @@ const UserPortfolio = () => {
       <h1>{portfolio.header}</h1>
       {portfolio.sections.map((section) => (
         <div key={section.id}>
-          <h2>{section.title}</h2>
-          <p>{section.content}</p>
+          {/* Render section based on its type */}
+          {section.type === 'text' && <h2>{section.content}</h2>}
+          {section.type === 'image' && <img src={section.content} alt="section" />}
+          {section.type === 'link' && <a href={section.content}>{section.content}</a>}
         </div>
       ))}
     </Container>

@@ -3,13 +3,14 @@ import { db } from '../firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Button, Form, Container, InputGroup } from 'react-bootstrap';
+import { Button, Container, Form, InputGroup, Col, Row } from 'react-bootstrap';
+import { templates } from '../components/templates'; // Import your template data
 
 const EditPortfolio = () => {
   const { user } = useAuth();
   const [portfolio, setPortfolio] = useState({ header: 'My Portfolio', sections: [] });
-  const [bgColor, setBgColor] = useState('#ffffff');
-  const [font, setFont] = useState('Arial');
+  const [headerColor, setHeaderColor] = useState('#000');
+  const [fontStyle, setFontStyle] = useState('Arial');
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -18,8 +19,8 @@ const EditPortfolio = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setPortfolio(docSnap.data());
-          setBgColor(docSnap.data().bgColor || '#ffffff');
-          setFont(docSnap.data().font || 'Arial');
+          setHeaderColor(docSnap.data().headerColor || '#000');
+          setFontStyle(docSnap.data().fontStyle || 'Arial');
         }
       }
     };
@@ -28,16 +29,13 @@ const EditPortfolio = () => {
 
   const savePortfolio = async () => {
     if (user) {
-      await setDoc(doc(db, 'portfolios', user.username), {
-        ...portfolio,
-        bgColor,
-        font,
-      });
+      await setDoc(doc(db, 'portfolios', user.username), { ...portfolio, headerColor, fontStyle });
     }
   };
 
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
+
     const items = Array.from(portfolio.sections);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -45,11 +43,21 @@ const EditPortfolio = () => {
     savePortfolio();
   };
 
+  const handleAddSection = (template) => {
+    const newSection = { ...template, id: new Date().toISOString() };
+    setPortfolio((prev) => ({
+      ...prev,
+      sections: [...prev.sections, newSection],
+    }));
+    savePortfolio();
+  };
+
   const handleContentChange = (id, value) => {
-    const updatedSections = portfolio.sections.map(section => 
-      section.id === id ? { ...section, title: value } : section
+    const updatedSections = portfolio.sections.map(section =>
+      section.id === id ? { ...section, content: value } : section
     );
     setPortfolio({ ...portfolio, sections: updatedSections });
+    savePortfolio();
   };
 
   const handleDeleteSection = (id) => {
@@ -58,60 +66,108 @@ const EditPortfolio = () => {
     savePortfolio();
   };
 
-  const handleUploadMedia = async (id, file) => {
-    // Handle media upload (e.g., using Firebase Storage) and update the section with the media URL
+  const handleImageUpload = async (event, sectionId) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedSections = portfolio.sections.map(section =>
+          section.id === sectionId ? { ...section, content: reader.result } : section
+        );
+        setPortfolio({ ...portfolio, sections: updatedSections });
+        savePortfolio();
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
-    <Container style={{ backgroundColor: bgColor, fontFamily: font }}>
-      <h1>{portfolio.header}</h1>
+    <Container>
+      <h1 style={{ color: headerColor, fontFamily: fontStyle }}>{portfolio.header}</h1>
       <InputGroup className="mb-3">
-        <InputGroup.Text>Background Color</InputGroup.Text>
-        <Form.Control 
-          type="color" 
-          value={bgColor} 
-          onChange={(e) => setBgColor(e.target.value)} 
+        <InputGroup.Text>Header Color</InputGroup.Text>
+        <Form.Control
+          type="color"
+          value={headerColor}
+          onChange={(e) => setHeaderColor(e.target.value)}
         />
       </InputGroup>
       <InputGroup className="mb-3">
-        <InputGroup.Text>Font</InputGroup.Text>
-        <Form.Control 
-          as="select" 
-          value={font} 
-          onChange={(e) => setFont(e.target.value)}
+        <InputGroup.Text>Font Style</InputGroup.Text>
+        <Form.Control
+          as="select"
+          value={fontStyle}
+          onChange={(e) => setFontStyle(e.target.value)}
         >
-          <option value="Arial">Arial</option>
-          <option value="Courier New">Courier New</option>
-          <option value="Georgia">Georgia</option>
-          <option value="Times New Roman">Times New Roman</option>
+          <option>Arial</option>
+          <option>Courier New</option>
+          <option>Georgia</option>
+          <option>Times New Roman</option>
+          <option>Verdana</option>
         </Form.Control>
       </InputGroup>
+
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="sections">
-          {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {portfolio.sections.map((section, index) => (
-                <Draggable key={section.id} draggableId={section.id} index={index}>
-                  {(provided) => (
-                    <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                      <Form.Control
-                        type="text"
-                        value={section.title}
-                        onChange={(e) => handleContentChange(section.id, e.target.value)}
-                      />
-                      <Button onClick={() => handleDeleteSection(section.id)}>Delete</Button>
-                      <input 
-                        type="file" 
-                        onChange={(e) => handleUploadMedia(section.id, e.target.files[0])} 
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
+        <Row>
+          <Col md={4}>
+            <Droppable droppableId="templates">
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <h2>Templates</h2>
+                  {templates.map((template, index) => (
+                    <Button 
+                      key={template.id} 
+                      onClick={() => handleAddSection(template)} 
+                      className="mb-2"
+                    >
+                      {template.title}
+                    </Button>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </Col>
+          <Col md={8}>
+            <Droppable droppableId="sections">
+              {(provided) => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  <h2>Your Sections</h2>
+                  {portfolio.sections.map((section, index) => (
+                    <Draggable key={section.id} draggableId={section.id} index={index}>
+                      {(provided) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-3">
+                          {section.type === 'text' && (
+                            <Form.Control
+                              type="text"
+                              defaultValue={section.content}
+                              onChange={(e) => handleContentChange(section.id, e.target.value)}
+                            />
+                          )}
+                          {section.type === 'image' && (
+                            <>
+                              <img src={section.content} alt="section" style={{ width: '100%' }} />
+                              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, section.id)} />
+                            </>
+                          )}
+                          {section.type === 'link' && (
+                            <Form.Control
+                              type="text"
+                              defaultValue={section.content}
+                              onChange={(e) => handleContentChange(section.id, e.target.value)}
+                            />
+                          )}
+                          <Button variant="danger" onClick={() => handleDeleteSection(section.id)}>Delete</Button>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </Col>
+        </Row>
       </DragDropContext>
       <Button onClick={savePortfolio}>Save Portfolio</Button>
     </Container>
