@@ -4,7 +4,7 @@ import { AuthProvider } from './components/AuthContext';
 import Auth from './components/Auth';
 import EditPortfolio from './screens/EditPortfolio';
 import UserPortfolio from './screens/UserPortfolio';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <Router>

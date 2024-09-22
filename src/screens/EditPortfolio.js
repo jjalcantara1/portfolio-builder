@@ -3,14 +3,15 @@ import { db } from '../firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Button, Container, Form, InputGroup, Col, Row } from 'react-bootstrap';
-import { templates } from '../components/templates'; // Import your template data
+import { Button, Container, Form, InputGroup, Col, Row, Card, Alert } from 'react-bootstrap';
+import { templates } from '../components/templates';
 
 const EditPortfolio = () => {
   const { user } = useAuth();
   const [portfolio, setPortfolio] = useState({ header: 'My Portfolio', sections: [] });
   const [headerColor, setHeaderColor] = useState('#000');
   const [fontStyle, setFontStyle] = useState('Arial');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -28,8 +29,12 @@ const EditPortfolio = () => {
   }, [user]);
 
   const savePortfolio = async () => {
-    if (user) {
-      await setDoc(doc(db, 'portfolios', user.username), { ...portfolio, headerColor, fontStyle });
+    try {
+      if (user) {
+        await setDoc(doc(db, 'portfolios', user.username), { ...portfolio, headerColor, fontStyle });
+      }
+    } catch (error) {
+      setErrorMessage('Error saving portfolio. Please try again.');
     }
   };
 
@@ -44,7 +49,7 @@ const EditPortfolio = () => {
   };
 
   const handleAddSection = (template) => {
-    const newSection = { ...template, id: new Date().toISOString() };
+    const newSection = { ...template, id: new Date().toISOString() }; // Ensure unique ID
     setPortfolio((prev) => ({
       ...prev,
       sections: [...prev.sections, newSection],
@@ -52,38 +57,17 @@ const EditPortfolio = () => {
     savePortfolio();
   };
 
-  const handleContentChange = (id, value) => {
-    const updatedSections = portfolio.sections.map(section =>
-      section.id === id ? { ...section, content: value } : section
-    );
-    setPortfolio({ ...portfolio, sections: updatedSections });
-    savePortfolio();
-  };
-
-  const handleDeleteSection = (id) => {
-    const updatedSections = portfolio.sections.filter(section => section.id !== id);
-    setPortfolio({ ...portfolio, sections: updatedSections });
-    savePortfolio();
-  };
-
-  const handleImageUpload = async (event, sectionId) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const updatedSections = portfolio.sections.map(section =>
-          section.id === sectionId ? { ...section, content: reader.result } : section
-        );
-        setPortfolio({ ...portfolio, sections: updatedSections });
-        savePortfolio();
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // Static sections for testing
+  const staticSections = [
+    { id: '1', type: 'text', content: 'Sample Text Section' },
+    { id: '2', type: 'image', content: 'https://via.placeholder.com/150' },
+    { id: '3', type: 'link', content: 'https://example.com' },
+  ];
 
   return (
-    <Container>
+    <Container className="mt-4">
       <h1 style={{ color: headerColor, fontFamily: fontStyle }}>{portfolio.header}</h1>
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
       <InputGroup className="mb-3">
         <InputGroup.Text>Header Color</InputGroup.Text>
         <Form.Control
@@ -112,16 +96,20 @@ const EditPortfolio = () => {
           <Col md={4}>
             <Droppable droppableId="templates">
               {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <h2>Templates</h2>
-                  {templates.map((template, index) => (
-                    <Button 
-                      key={template.id} 
-                      onClick={() => handleAddSection(template)} 
-                      className="mb-2"
-                    >
-                      {template.title}
-                    </Button>
+                <div ref={provided.innerRef} {...provided.droppableProps} className="border p-2 bg-light">
+                  <h4>Templates</h4>
+                  {templates.map((template) => (
+                    <Card key={template.id} className="mb-2">
+                      <Card.Body>
+                        <Button 
+                          variant="outline-primary"
+                          onClick={() => handleAddSection(template)} 
+                          className="w-100"
+                        >
+                          {template.title}
+                        </Button>
+                      </Card.Body>
+                    </Card>
                   ))}
                   {provided.placeholder}
                 </div>
@@ -131,33 +119,28 @@ const EditPortfolio = () => {
           <Col md={8}>
             <Droppable droppableId="sections">
               {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps}>
-                  <h2>Your Sections</h2>
-                  {portfolio.sections.map((section, index) => (
+                <div ref={provided.innerRef} {...provided.droppableProps} className="border p-2 bg-light">
+                  <h4>Your Sections</h4>
+                  {staticSections.map((section, index) => (
                     <Draggable key={section.id} draggableId={section.id} index={index}>
                       {(provided) => (
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-3">
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mb-3 p-2 border rounded bg-white">
                           {section.type === 'text' && (
                             <Form.Control
                               type="text"
                               defaultValue={section.content}
-                              onChange={(e) => handleContentChange(section.id, e.target.value)}
                             />
                           )}
                           {section.type === 'image' && (
-                            <>
-                              <img src={section.content} alt="section" style={{ width: '100%' }} />
-                              <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, section.id)} />
-                            </>
+                            <img src={section.content} alt="section" style={{ width: '100%', borderRadius: '5px' }} />
                           )}
                           {section.type === 'link' && (
                             <Form.Control
                               type="text"
                               defaultValue={section.content}
-                              onChange={(e) => handleContentChange(section.id, e.target.value)}
                             />
                           )}
-                          <Button variant="danger" onClick={() => handleDeleteSection(section.id)}>Delete</Button>
+                          <Button variant="danger" className="mt-2">Delete</Button>
                         </div>
                       )}
                     </Draggable>
@@ -169,7 +152,7 @@ const EditPortfolio = () => {
           </Col>
         </Row>
       </DragDropContext>
-      <Button onClick={savePortfolio}>Save Portfolio</Button>
+      <Button onClick={savePortfolio} className="mt-3">Save Portfolio</Button>
     </Container>
   );
 };
