@@ -1,37 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { useParams } from 'react-router-dom';
+import { db } from '../firebase'; // Import your Firebase config
+import { doc, onSnapshot } from 'firebase/firestore';
+import { useAuth } from '../components/AuthContext';
 import { Container } from 'react-bootstrap';
 
 const UserPortfolio = () => {
-  const { username } = useParams();
-  const [portfolio, setPortfolio] = useState(null);
+  const { user } = useAuth();
+  const [elements, setElements] = useState([]);
 
   useEffect(() => {
-    const fetchPortfolio = async () => {
-      const docRef = doc(db, 'portfolios', username);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setPortfolio(docSnap.data());
-      }
-    };
-    fetchPortfolio();
-  }, [username]);
+    if (user) {
+      const docRef = doc(db, 'portfolios', user.uid);
+      const unsubscribe = onSnapshot(docRef, (doc) => {
+        if (doc.exists()) {
+          setElements(doc.data().elements || []);
+        }
+      });
 
-  if (!portfolio) return <div>Loading...</div>;
+      return () => unsubscribe();
+    }
+  }, [user]);
 
   return (
-    <Container>
-      <h1>{portfolio.header}</h1>
-      {portfolio.sections.map((section) => (
-        <div key={section.id}>
-          {/* Render section based on its type */}
-          {section.type === 'text' && <h2>{section.content}</h2>}
-          {section.type === 'image' && <img src={section.content} alt="section" />}
-          {section.type === 'link' && <a href={section.content}>{section.content}</a>}
-        </div>
-      ))}
+    <Container className="mt-4">
+      <h1>Your Portfolio</h1>
+      <div
+        style={{
+          border: '1px solid #ccc',
+          height: '600px',
+          position: 'relative',
+          marginTop: '20px',
+        }}
+      >
+        {elements.map((element) => (
+          <div
+            key={element.id}
+            style={{
+              position: 'absolute',
+              left: element.x,
+              top: element.y,
+              width: element.type === 'text' ? 200 : 150,
+              height: element.type === 'text' ? 50 : 150,
+              border: '1px solid #000',
+              backgroundColor: '#fff',
+              padding: '10px',
+              textAlign: 'center',
+            }}
+          >
+            {element.type === 'text' && <input type="text" value={element.content} readOnly />}
+            {element.type === 'image' && (
+              <img
+                src={element.content}
+                alt="Element"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
     </Container>
   );
 };
