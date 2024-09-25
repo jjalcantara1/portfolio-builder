@@ -1,21 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './components/AuthContext';
-import Auth from './components/Auth';
+import Login from './screens/Login';
+import Register from './screens/Register';
 import EditPortfolio from './screens/EditPortfolio';
+import EmailVerification from './screens/EmailVerification';
+import { AuthProvider } from './components/AuthContext';
 import UserPortfolio from './screens/UserPortfolio';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import LandingPage from './screens/LandingPage';
+import Logout from './components/Logout';
+import ForgotPassword from './screens/ForgotPassword';
+
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Auth />} />
-          <Route path="/:username" element={<UserPortfolio />} />
-          <Route path="/edit" element={<EditPortfolio />} />
-        </Routes>
-      </AuthProvider>
+  <Router>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage />} /> 
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/edit" element={<EditPortfolio />} />
+        <Route path="/email-verification" element={<EmailVerification />} />
+        <Route path="/:username" element={<UserPortfolio />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/email-verification" element={<EmailVerification />} />
+
+      </Routes>
+    </AuthProvider>
     </Router>
+ 
   );
 }
 

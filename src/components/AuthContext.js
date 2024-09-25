@@ -9,29 +9,35 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Set a flag to check if the current location is the edit page
-  const isEditPage = location.pathname.startsWith('/edit');
+  // Set a flag to check if the current location is the edit page or any protected page
+  const isProtectedRoute = location.pathname.startsWith('/edit');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const username = user.email.split('@')[0];
         setUser({ ...user, username });
-
-        // Only navigate if not already on the edit page
-        if (!isEditPage) {
-          navigate(`/${username}`);
-        }
       } else {
         setUser(null);
-        navigate('/auth');
+
+        // Only redirect if on a protected route
+        if (isProtectedRoute) {
+          navigate('/login');
+        }
       }
+      setLoading(false); // Once the user state is resolved, stop loading
     });
+
     return () => unsubscribe();
-  }, [navigate, isEditPage]);
+  }, [navigate, isProtectedRoute]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading while checking user state
+  }
 
   return (
     <AuthContext.Provider value={{ user }}>
