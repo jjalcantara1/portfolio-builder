@@ -3,6 +3,7 @@ import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import '../css/Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div id="logincon">
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -39,6 +40,7 @@ const Login = () => {
         />
         <div style={{ position: 'relative' }}>
           <input
+            id="loginpass"
             type={showPassword ? 'text' : 'password'} // Toggle input type based on state
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -59,13 +61,15 @@ const Login = () => {
           </span>
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
-        <button type="button" onClick={() => navigate('/register')}>
-          Create an Account
-        </button>
-        <button type="button" onClick={() => navigate('/forgot-password')}>
-          Forgot Password?
-        </button>
+        <button type="submit" id="loginbutton">Login</button>
+        <div id="buttoncon">
+            <button type="button" id="registerlink" onClick={() => navigate('/register')}>
+              Create an Account
+            </button>
+            <button type="button" id="forgotlink" onClick={() => navigate('/forgot-password')}>
+              Forgot Password?
+            </button>
+        </div>
       </form>
     </div>
   );

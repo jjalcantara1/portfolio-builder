@@ -3,6 +3,7 @@ import { auth } from '../firebase';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import '../css/Register.css';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div id="registercon">
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -60,6 +61,7 @@ const Register = () => {
         />
         <div style={{ position: 'relative' }}>
           <input
+            id="regispass"
             type={passwordVisible ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -68,13 +70,14 @@ const Register = () => {
           />
           <span
             onClick={() => setPasswordVisible(!passwordVisible)}
-            style={{ position: 'absolute', right: 10, top: 10, cursor: 'pointer', fontSize: '1.2em' }} // Adjust font size
+            style={{ position: 'absolute', right: 10, top: 12, cursor: 'pointer', fontSize: '1.2em' }} // Adjust font size
           >
             {passwordVisible ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
         <div style={{ position: 'relative' }}>
           <input
+            id="confirmpass"
             type={confirmPasswordVisible ? 'text' : 'password'}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -83,16 +86,19 @@ const Register = () => {
           />
           <span
             onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-            style={{ position: 'absolute', right: 10, top: 10, cursor: 'pointer', fontSize: '1.2em'}} // Adjust font size
+            style={{ position: 'absolute', right: 10, top: 12, cursor: 'pointer', fontSize: '1.2em'}} // Adjust font size
           >
             {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Register</button>
-        <button type="button" onClick={() => navigate('/login')}>
-          Already have an account? Login
-        </button>
+        <button type="submit" id="regisbutton" >Register</button>
+        <div id="buttoncon">
+            <button type="button" id="loginlink" onClick={() => navigate('/login')}>
+              Already have an account? Login
+            </button>
+        </div>
+
       </form>
     </div>
   );
