@@ -28,10 +28,12 @@ const Login = () => {
   };
 
   return (
-    <div id="logincon">
-      <h1>Login</h1>
+    <body id="login">
+      <div id="logincon">
+      <h1 id="title">Login</h1>
       <form onSubmit={handleSubmit}>
         <input
+          id="loginemail"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -50,10 +52,12 @@ const Login = () => {
           <span
             style={{
               position: 'absolute',
-              right: '10px',
-              top: '50%',
+              right: '15px',
+              top: '1.25rem',
               transform: 'translateY(-50%)',
               cursor: 'pointer',
+              color: 'rgb(255,217,90)',
+              backgroundColor: 'transparent',
             }}
             onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
           >
@@ -72,6 +76,7 @@ const Login = () => {
         </div>
       </form>
     </div>
+    </body>
   );
 };
 

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
+import '../css/AuthContext.css';
 
 const AuthContext = createContext();
 
@@ -35,8 +36,18 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, [navigate, isProtectedRoute]);
 
+  // if (loading) {
+  //   return <div>Loading...</div>; // Show loading while checking user state
+  // }
+
   if (loading) {
-    return <div>Loading...</div>; // Show loading while checking user state
+    return (
+      <body id="spin">
+        <div id="loadcon">
+        <div className="spinner"></div>
+      </div>
+      </body>
+    );
   }
 
   return (

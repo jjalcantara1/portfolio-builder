@@ -42,17 +42,21 @@ const Register = () => {
   };
 
   return (
-    <div id="registercon">
-      <h1>Register</h1>
+    <body id="register">
+      <div id="registercon">
+      <h1 id="title">Register</h1>
       <form onSubmit={handleSubmit}>
         <input
+          id="registername"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
           required
+          autoComplete="off" 
         />
         <input
+          id="registeremail"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +74,15 @@ const Register = () => {
           />
           <span
             onClick={() => setPasswordVisible(!passwordVisible)}
-            style={{ position: 'absolute', right: 10, top: 12, cursor: 'pointer', fontSize: '1.2em' }} // Adjust font size
+            style={{
+              position: 'absolute',
+              right: '15px',
+              top: '1.25rem',
+              transform: 'translateY(-50%)',
+              cursor: 'pointer',
+              color: 'rgb(255,217,90)',
+              backgroundColor: 'transparent',
+            }}
           >
             {passwordVisible ? <FaEyeSlash /> : <FaEye />}
           </span>
@@ -86,8 +98,15 @@ const Register = () => {
           />
           <span
             onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-            style={{ position: 'absolute', right: 10, top: 12, cursor: 'pointer', fontSize: '1.2em'}} // Adjust font size
-          >
+            style={{
+              position: 'absolute',
+              right: '15px',
+              top: '1.25rem',
+              transform: 'translateY(-50%)',
+              cursor: 'pointer',
+              color: 'rgb(255,217,90)',
+              backgroundColor: 'transparent',
+            }}          >
             {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
@@ -101,6 +120,7 @@ const Register = () => {
 
       </form>
     </div>
+    </body>
   );
 };
 
