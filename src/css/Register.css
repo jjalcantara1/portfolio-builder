@@ -5,6 +5,20 @@ input:-webkit-autofill {
     -webkit-text-fill-color: #f0eeeb !important; 
 }
 
+#logo {
+  height: 10rem;
+  width: 18rem;
+  position: fixed;
+  opacity: 0;
+  animation: fadeIn 1.25s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
 .poppins-regular {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
