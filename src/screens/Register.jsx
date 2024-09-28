@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import '../css/Register.css';
@@ -32,6 +32,11 @@ const Register = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      
+      await updateProfile(user, {
+        displayName: username,  // Set the displayName to the username
+      });
+
       await sendEmailVerification(user);
 
       alert('A verification email has been sent. Please check your inbox and verify your email address.');
