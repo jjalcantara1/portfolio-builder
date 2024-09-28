@@ -4,6 +4,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import '../css/Login.css';
+import logo from '../images/porthub_logo.png';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,6 +31,9 @@ const Login = () => {
 
   return (
     <body id="login">
+      <div>
+      <img src={logo} alt="Logo" id="logo" />
+      </div>
       <div id="logincon">
       <h1 id="title">Login</h1>
       <form onSubmit={handleSubmit}>

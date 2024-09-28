@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } 
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import '../css/Register.css';
+import logo from '../images/porthub_logo.png';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -48,6 +49,9 @@ const Register = () => {
 
   return (
     <body id="register">
+      <div>
+      <img src={logo} alt="Logo" id="logo" />
+      </div>
       <div id="registercon">
       <h1 id="title">Register</h1>
       <form onSubmit={handleSubmit}>
