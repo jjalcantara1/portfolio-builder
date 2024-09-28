@@ -10,6 +10,7 @@ import LandingPage from './screens/LandingPage';
 import Logout from './components/Logout';
 import ForgotPassword from './screens/ForgotPassword';
 import Profile from './screens/Profile';
+import Template from './screens/Template';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/email-verification" element={<EmailVerification />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/template" element={<Template />} />
       </Routes>
     </AuthProvider>
     </Router>
