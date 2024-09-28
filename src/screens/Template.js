@@ -82,7 +82,7 @@ const Template = () => {
               </div>
             </div>
             <div id="signoutcon">
-                <button id="signoutbutton">Sign out</button>
+                <button id="signoutbutton" onClick={() => navigate('/logout')}>Sign out</button>
             </div>
       </div>
 
