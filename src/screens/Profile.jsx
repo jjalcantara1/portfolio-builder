@@ -34,7 +34,7 @@ const Profile = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [db]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
