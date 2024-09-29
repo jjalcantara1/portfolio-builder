@@ -9,7 +9,7 @@ import UserPortfolio from './screens/UserPortfolio';
 import LandingPage from './screens/LandingPage';
 import Logout from './components/Logout';
 import ForgotPassword from './screens/ForgotPassword';
-import Profile from './screens/Profile';
+import Portfolio from './screens/Portfolio';
 import TemplateScreen from './screens/TemplateScreen';
 
 
@@ -28,7 +28,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/email-verification" element={<EmailVerification />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/portfolio" element={<Portfolio />}/>
         <Route path="/template" element={<TemplateScreen />} />
       </Routes>
     </AuthProvider>
