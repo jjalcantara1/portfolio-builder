@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+#templatebody {
+    background-color: #141426;
+    height: 100dvh;
+    overflow-y: hidden;
+
+}
+
+#createtemp {
+    text-align: center;
+}
+
 .poppins-regular {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
@@ -18,9 +29,9 @@
 #logo {
     height: 10rem;
     width: 18rem;
-    position: fixed;
     opacity: 0;
-    animation: fadeIn 1.25s ease forwards;
+    position: absolute;
+    animation: slideport 1.15s ease forwards;
   }
 
   @keyframes fadeIn {
@@ -32,10 +43,10 @@
 
 #portcon {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
     margin: 0 auto;
+    align-items: center;
+    height: 40dvh;
 }
 
 #topcontainer {
@@ -57,13 +68,13 @@
     color: #e2e1e1;
     max-height: 4rem;
     grid-column: 1;
-    margin-left: 12rem;
+    margin-left: 14rem;
     animation: slideport 1.15s ease forwards;
 }
 
 @keyframes slideport {
     from {
-        scale: 0.7;
+        scale: 0.85;
         transform: translateY(-100%);
     }
     to {
@@ -91,8 +102,10 @@
     margin-top: 2rem;
     gap: 1rem;
     border: #f9b37c .35rem solid;
-    font-size: 18px;
+    font-size: 16px;
     color: #e2e1e1;
     margin-bottom: 10rem;
     cursor: pointer;
+    font-family: 'Poppins';
+    animation: slideport 1.15s ease forwards;
 }

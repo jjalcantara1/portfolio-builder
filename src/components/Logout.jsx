@@ -20,7 +20,17 @@ const Logout = () => {
     handleLogout();
   }, [navigate]);
 
-  return <div>Logging you out...</div>; // Optional loading message
+  return (
+    <body id="spin">
+      <div id="loadcon">
+      <div className="spinner"></div>
+      <p id="spinnertext">
+          Logging you out...
+        </p>
+    </div>
+
+    </body>
+  ); // Optional loading message
 };
 
 export default Logout;

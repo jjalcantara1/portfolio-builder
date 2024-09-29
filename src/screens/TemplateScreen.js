@@ -6,9 +6,11 @@ import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
 import { Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import templates from '../components/templates'; // Import the templates
+import templates from '../components/templates'; 
 import logo from '../images/porthub_logo.png'
 import '../css/Template.css';
+import '../css/CardButton.css';
+
 
 const Template = () => {
   const { user } = useAuth();
@@ -39,12 +41,8 @@ const Template = () => {
     savePortfolio();
   }, [elements, user]); // Save whenever elements change
 
-  // Load selected template elements
   const handleLoadTemplate = (templateId) => {
-    const selectedTemplate = templates.find((t) => t.id === templateId);
-    if (selectedTemplate) {
-      setElements(selectedTemplate.elements);
-    }
+    navigate(`/edit/${templateId}`);
   };
 
   // Handle dragging of elements
@@ -72,7 +70,7 @@ const Template = () => {
   };
 
   return (
-    <Container>
+    <body id="templatebody">
       <div id="nav">
             <img src={logo} alt="Logo" id="logo" />
             <div id="topcontainer">
@@ -85,18 +83,25 @@ const Template = () => {
                 <button id="signoutbutton" onClick={() => navigate('/logout')}>Sign out</button>
             </div>
       </div>
+    <div id="portcon">
+    <div id="cardcon">
+  <div className="template-card" onClick={() => navigate('/edit')}>
+    <h2 id="createtemp">Create your Own Template</h2>
+  </div>
 
-     <div id="portcon">
+  {templates.map((template) => (
+    <div
+      key={template.id}
+      className="template-card"
+      onClick={() => handleLoadTemplate(template.id)}
+    >
+      <h2>{template.name}</h2>
+    </div>
+  ))}
+</div>
+    </div>
 
-      {/* Template Loader */}
-      <div>
-        <button onClick={() => navigate('/edit')}>Create Template</button>
-        {templates.map((template) => (
-          <Button key={template.id} onClick={() => handleLoadTemplate(template.id)}>
-            {template.name}
-          </Button>
-        ))}
-      </div>
+
 
       {/* Editable elements area */}
       <div
@@ -154,10 +159,8 @@ const Template = () => {
           </Rnd>
         ))}
       </div>
-
-      </div>
       
-    </Container>
+    </body>
   );
 };
 

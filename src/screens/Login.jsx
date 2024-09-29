@@ -20,7 +20,7 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       if (user.emailVerified) {
-        navigate('/edit'); // Redirect to edit page if email is verified
+        navigate('/template'); // Redirect to edit page if email is verified
       } else {
         setError('Please verify your email before logging in.');
       }

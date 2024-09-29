@@ -3,11 +3,17 @@
     height: 100dvh;
 }
 
+#spinnertext {
+   color: #e2e1e1;
+   font-family: 'Poppins';
+   font-size: 24px;
+}
+
 #loadcon {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
+    flex-direction: column;
     height: 100dvh;
 }
 
