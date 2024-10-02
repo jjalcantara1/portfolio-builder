@@ -124,3 +124,39 @@ input:-webkit-autofill {
       transform: translateY(0);
     }
   }
+
+  /* Error message styling */
+.error-message {
+  color: rgb(255, 90, 90); /* Red tone to indicate error */
+  background-color: rgba(255, 90, 90, 0.1); /* Light red background */
+  border: 1px solid rgba(255, 90, 90, 0.5); /* Border with soft red */
+  border-radius: 1rem; /* Rounded corners */
+  padding: 0.5rem;
+  width: 95%;
+  text-align: center;
+  font-size: 0.65rem;
+  margin-top: 0.5rem;
+  animation: fadeInError 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeInError {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Error placeholder styling */
+input.error-input {
+  border-color: rgb(255, 90, 90) !important; /* Red border for input */
+  background-color: rgba(255, 90, 90, 0.1) !important; /* Light red background for input */
+}
+
+input.error-input::placeholder {
+  color: rgba(255, 90, 90, 0.75); /* Slightly transparent red placeholder text */
+}
+

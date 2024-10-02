@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import EditPortfolio from './screens/EditPortfolio';
@@ -11,29 +11,80 @@ import Logout from './components/Logout';
 import ForgotPassword from './screens/ForgotPassword';
 import Portfolio from './screens/Portfolio';
 import TemplateScreen from './screens/TemplateScreen';
-
+import ProtectedRoute from './components/ProtectedRoutes';  // Import ProtectedRoute
 
 function App() {
+
+  // Check if username exists in your database (this is just a placeholder for your actual logic)
+  const isValidUsername = (username) => {
+    // Implement actual check against the database or your user list
+    const validUsernames = ['user1', 'user2']; // Replace with actual logic
+    return validUsernames.includes(username);
+  };
+
   return (
-  <Router>
-    <AuthProvider>
-      <Routes>
-        <Route path="/" element={<LandingPage />} /> 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/edit" element={<EditPortfolio />} />
-        <Route path="/edit/:templateId" element={<EditPortfolio />} />
-        <Route path="/email-verification" element={<EmailVerification />} />
-        <Route path="/:username" element={<UserPortfolio />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/email-verification" element={<EmailVerification />} />
-        <Route path="/portfolio" element={<Portfolio />}/>
-        <Route path="/template" element={<TemplateScreen />} />
-      </Routes>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/email-verification" element={<EmailVerification />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+
+          {/* Protected Routes */}
+          <Route 
+            path="/edit" 
+            element={
+              <ProtectedRoute>
+                <EditPortfolio />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/edit/:templateId" 
+            element={
+              <ProtectedRoute>
+                <EditPortfolio />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/logout" 
+            element={
+              <ProtectedRoute>
+                <Logout />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/template" 
+            element={
+              <ProtectedRoute>
+                <TemplateScreen />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* User Portfolio Route with Username Validation */}
+          <Route 
+            path="/:username" 
+            element={({ match }) => {
+              const username = match.params.username;
+              return isValidUsername(username) ? (
+                <UserPortfolio />
+              ) : (
+                <Navigate to="/" />
+              );
+            }} 
+          />
+          
+          {/* Catch-all for invalid routes */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </AuthProvider>
     </Router>
- 
   );
 }
 

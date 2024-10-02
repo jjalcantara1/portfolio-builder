@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase';
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import '../css/Register.css';
 import logo from '../images/porthub_logo.png';
 
@@ -14,13 +18,15 @@ const Register = () => {
   const [error, setError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false); // State for password visibility
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // State for confirm password visibility
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  // Validate the username based on length and allowed characters
   const validateUsername = (username) => {
-    const restrictedUsernames = ['auth', 'edit', 'email-verification', 'logout', 'forgot-password', '']; // Restricted usernames
+    const restrictedUsernames = [
+      'auth', 'edit', 'email-verification',
+      'logout', 'forgot-password', ''
+    ];
     if (restrictedUsernames.includes(username)) {
       return 'This username is not allowed.';
     }
@@ -33,7 +39,6 @@ const Register = () => {
     return ''; // No error
   };
 
-  // Validate the password based on length and complexity
   const validatePassword = (password) => {
     if (password.length < 8) {
       return 'Password must be at least 8 characters long.';
@@ -48,15 +53,14 @@ const Register = () => {
       return 'Password must contain at least one number.';
     }
     if (!/[!@#$%^&*]/.test(password)) {
-      return 'Password must contain at least one special character (!@#$%^&*).';
+      return 'Password must contain a special character (!@#$%^&*).';
     }
     return ''; // No error
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate username and password
+
     const usernameValidation = validateUsername(username);
     const passwordValidation = validatePassword(password);
 
@@ -82,15 +86,13 @@ const Register = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      
-      await updateProfile(user, {
-        displayName: username,  // Set the displayName to the username
-      });
+
+      await updateProfile(user, { displayName: username });
 
       await sendEmailVerification(user);
 
       alert('A verification email has been sent. Please check your inbox and verify your email address.');
-      navigate('/email-verification'); // Redirect to EmailVerification component after registration
+      navigate('/email-verification');
     } catch (error) {
       setError(error.message);
     }
@@ -106,15 +108,18 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           <input
             id="registername"
+            className={usernameError ? 'error-input' : ''}
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
             required
-            autoComplete="off" 
+            autoComplete="off"
           />
-          {usernameError && <p style={{ color: 'red' }}>{usernameError}</p>}
-          
+          {usernameError && (
+            <p className="error-message">{usernameError}</p>
+          )}
+
           <input
             id="registeremail"
             type="email"
@@ -123,10 +128,11 @@ const Register = () => {
             placeholder="Email"
             required
           />
-          
+
           <div style={{ position: 'relative' }}>
             <input
               id="regispass"
+              className={passwordError ? 'error-input' : ''}
               type={passwordVisible ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -148,11 +154,14 @@ const Register = () => {
               {passwordVisible ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+          {passwordError && (
+            <p className="error-message">{passwordError}</p>
+          )}
 
           <div style={{ position: 'relative' }}>
             <input
               id="confirmpass"
+              className={error ? 'error-input' : ''}
               type={confirmPasswordVisible ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -174,12 +183,18 @@ const Register = () => {
               {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          
+          {error && (
+            <p className="error-message">{error}</p>
+          )}
+
           <button type="submit" id="regisbutton">Register</button>
-          
+
           <div id="buttoncon">
-            <button type="button" id="loginlink" onClick={() => navigate('/login')}>
+            <button
+              type="button"
+              id="loginlink"
+              onClick={() => navigate('/login')}
+            >
               Already have an account? Login
             </button>
           </div>
