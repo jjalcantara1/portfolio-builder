@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import '../css/Register.css';
 import logo from '../images/porthub_logo.png';
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -87,10 +88,20 @@ const Register = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Update user profile
       await updateProfile(user, { displayName: username });
 
-      await sendEmailVerification(user);
+      // Get Firestore instance
+      const db = getFirestore();
+      
+      // Set user data in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        username: username,
+        profilePictureUrl: '', // Set this as needed
+        email: user.email, // Optionally store email
+      });
 
+      await sendEmailVerification(user);
       alert('A verification email has been sent. Please check your inbox and verify your email address.');
       navigate('/email-verification');
     } catch (error) {

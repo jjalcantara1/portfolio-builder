@@ -33,7 +33,11 @@ const Portfolio = () => {
         const docRef = doc(db, 'users', user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setProfile(docSnap.data());
+          setProfile((prevProfile) => ({
+            ...prevProfile,
+            ...docSnap.data(),
+            links: docSnap.data().links || [''], // Ensure links are an array
+          }));
         } else {
           console.log('No such document!');
         }
@@ -250,25 +254,20 @@ const Portfolio = () => {
                         type="text"
                         value={link}
                         onChange={(e) => handleLinkChange(e, index)}
-                        className="input-field"
-                        placeholder={`Link #${index + 1}`}
+                        placeholder={`Link ${index + 1}`}
+                        className="link-input"
                       />
-                      <Button variant="danger" onClick={() => handleRemoveLink(index)}>
-                        Remove
-                      </Button>
+                      <Button variant="danger" onClick={() => handleRemoveLink(index)} className="remove-link-button">Remove</Button>
                     </div>
                   ))}
-                  <Button variant="primary" onClick={handleAddLink}>
-                    Add Link
-                  </Button>
+                  <Button variant="secondary" onClick={handleAddLink} className="add-link-button">Add Link</Button>
 
-                  <Button variant="success" onClick={handleSave} className="mt-3">
-                    Save Profile
-                  </Button>
+                  <Button variant="primary" onClick={handleSave} className="save-button">Save Profile</Button>
                 </Form>
               </div>
             </div>
           )}
+
           {determineDisplayedSection() === 'theme' && (
             <div className="theme-content">
               <h3>Theme Settings</h3>
@@ -287,25 +286,28 @@ const Portfolio = () => {
             </div>
           )}
         </div>
+        
 
-        {/* Static User Info Card */}
         <div className="user-info-section">
+          {/* Render the user's portfolio based on the profile data */}
           <div className="user-info-card">
-            <div className="user-image">
-              <div className="user-image-placeholder">
-                {profile.profilePictureUrl ? (
-                  <img src={profile.profilePictureUrl} alt="Profile" className="user-profile-image" />
-                ) : (
-                  <div className="user-image-default">No Image</div>
-                )}
-              </div>
+            <h2>{profile.name}'s Portfolio</h2>
+            <div className="portfolio-image">
+              {profile.profilePictureUrl ? (
+                <img src={profile.profilePictureUrl} alt="Profile" className="portfolio-profile-image" />
+              ) : (
+                <div className="portfolio-image-placeholder">No Image</div>
+              )}
             </div>
-            <div className="user-details">
-              <p><strong>Name:</strong> {profile.name}</p>
-              <p><strong>Age:</strong> {profile.age}</p>
-              <p><strong>Bio:</strong> {profile.bio}</p>
-              <p>Links: {profile.links.join(', ')}</p>
-            </div>
+            <p className="portfolio-bio">{profile.bio}</p>
+            <h3>Links:</h3>
+            <ul className="portfolio-links">
+              {profile.links.map((link, index) => (
+                <li key={index}>
+                  <a href={link} target="_blank" rel="noopener noreferrer">{link || 'Link Not Provided'}</a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

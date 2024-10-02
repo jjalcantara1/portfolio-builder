@@ -76,3 +76,76 @@
     align-items: center; /* Center align the button vertically */
   }
   
+
+  #logo {
+    height: 10rem; /* Adjust as needed */
+    width: 18rem; /* Adjust as needed */
+    opacity: 1; /* Set to 1 to make it visible */
+    position: absolute; /* Use absolute or fixed based on your layout preference */
+    top: 0; /* Aligns to the top */
+    left: 0; /* Aligns to the left */
+    display: flex; /* Align items within the logo container */
+    align-items: start; /* Align items to the start */
+  }
+  .profile {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Make height and width equal for a circle */
+    border-radius: 50%; /* Makes the image circular */
+    background-color: #ccc;
+    margin-right: 0;
+    overflow: hidden; /* Ensures the image doesn't overflow outside the circle */
+  }
+  
+  .profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the circle properly */
+  }
+
+  .nav-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .username {
+    color: orange; /* Change to your desired orange color */
+    font-weight: bold; /* Optional: makes the username bolder */
+    margin-right: 10px; /* Space between username and profile picture */
+  }
+  
+  .profile-pic {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes the profile picture circular */
+    border: 2px solid orange; /* Orange border */
+  }
+
+  .profile-modal {
+    width: 250px; /* Adjust the width as needed */
+    border-radius: 8px; /* Rounded corners for card effect */
+  }
+  
+  .modal-options {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .modal-options li {
+    margin: 10px 0;
+  }
+  
+  .modal-options button {
+    width: 100%; /* Full width buttons */
+    background-color: transparent; /* Make it transparent */
+    border: none; /* No border */
+    color: #ff7f50; /* Orange color for text */
+    cursor: pointer;
+    padding: 10px;
+    text-align: left; /* Align text to the left */
+  }
+  
+  .modal-options button:hover {
+    background-color: rgba(255, 127, 80, 0.1); /* Slight background on hover */
+  }
+  
