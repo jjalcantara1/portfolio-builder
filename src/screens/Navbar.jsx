@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Card, Button } from 'react-bootstrap'; // Import Card and Button
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore';
-import { auth } from '../firebase'; // Adjust the path to your firebase.js file
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom'; 
 import '../css/Navbar.css';
 import logo from '../images/porthub_logo.png';
 
@@ -10,50 +10,40 @@ const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
   const [username, setUsername] = useState('');
-  const navigate = useNavigate(); // Use useNavigate for navigation
+  const navigate = useNavigate();
 
-  const toggleModal = () => setShowModal((prev) => !prev); // Toggle modal visibility
+  const toggleModal = () => setShowModal((prev) => !prev);
 
   useEffect(() => {
     const fetchProfileData = () => {
-      const user = auth.currentUser; // Get the currently logged-in user
+      const user = auth.currentUser;
       if (user) {
         const db = getFirestore();
         const docRef = doc(db, 'users', user.uid);
 
-        // Set up a real-time listener
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
-            console.log('Fetched data:', data); // Log fetched data
-            setProfilePictureUrl(data.profilePictureUrl || ''); // Set profile picture URL
-            setUsername(data.username || ''); // Set username
-
-            // Debugging: Check if username is set correctly
-            console.log('Username set to:', data.username || '');
-          } else {
-            console.log('No such document!');
+            setProfilePictureUrl(data.profilePictureUrl || '');
+            setUsername(data.username || '');
           }
         });
 
-        // Cleanup the listener on component unmount
         return () => unsubscribe();
-      } else {
-        console.log('No user is currently logged in.'); // Debugging
       }
     };
 
-    fetchProfileData(); // Fetch profile data when the component mounts
+    fetchProfileData();
   }, []);
 
   const handleLogout = () => {
     auth.signOut().then(() => {
-      navigate('/logout'); // Redirect to /logout after signing out
+      navigate('/logout');
     });
   };
 
   const handleViewPortfolio = () => {
-    navigate(`/${username}`); // Navigate to /:username
+    navigate(`/${username}`);
   };
 
   return (
@@ -67,8 +57,8 @@ const Navbar = () => {
           <button className="navbar-button">Portfolio</button>
         </div>
       </div>
-      <div className="nav-profile" onClick={toggleModal} style={{ position: 'relative', cursor: 'pointer' }}>
-        <span className="username">{username ? username : 'Guest'}</span>
+      <div className="nav-profile" onClick={toggleModal}>
+        <span className="username">{username || 'Guest'}</span>
         <img src={profilePictureUrl} alt="Profile" className="profile-pic" />
         <Modal
           show={showModal}
@@ -76,20 +66,42 @@ const Navbar = () => {
           className="profile-modal"
           style={{
             position: 'absolute',
-            top: '60%', // Adjust to position below the profile section
-            right: '0',
+            top: '100px',  // Adjusted top position
+            right: '10px', // Aligned to the right
             zIndex: '1050',
-            width: '250px', // Set a width for the modal
           }}
         >
-       
           <Modal.Body>
-            <ul className="modal-options">
-              <li><button onClick={handleViewPortfolio}>View Portfolio</button></li>
-              <li><button onClick={handleLogout}>Logout</button></li>
-              <li><button onClick={toggleModal}>Change Password</button></li>
-              <li><button onClick={toggleModal}>Change Email</button></li>
-            </ul>
+            <Card className="profile-card">
+              <Card.Body>
+                <ul className="modal-options">
+                  <li>
+                    <Button 
+                      variant="primary" 
+                      className="w-100" 
+                      onClick={() => navigate('/account')}>
+                      Account Settings
+                    </Button>
+                  </li>
+                  <li>
+                    <Button 
+                      variant="primary" 
+                      className="w-100" 
+                      onClick={handleViewPortfolio}>
+                      View Portfolio
+                    </Button>
+                  </li>
+                  <li>
+                    <Button 
+                      variant="danger" 
+                      className="w-100" 
+                      onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </li>
+                </ul>
+              </Card.Body>
+            </Card>
           </Modal.Body>
         </Modal>
       </div>

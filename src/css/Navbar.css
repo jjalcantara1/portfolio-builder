@@ -106,6 +106,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    position: relative;
   }
   
   .username {
@@ -122,8 +123,20 @@
   }
 
   .profile-modal {
-    width: 250px; /* Adjust the width as needed */
-    border-radius: 8px; /* Rounded corners for card effect */
+    width: 250px;
+    border-radius: 8px;
+    position: absolute;
+    top: 60px;  /* Adjust modal position */
+    right: 10px;
+    z-index: 1050;
+    padding: 10px;
+  }
+  .profile-card {
+    background-color: #2a2f4f; /* Background color of the card */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    color: white; /* Text color */
   }
   
   .modal-options {
@@ -136,16 +149,17 @@
   }
   
   .modal-options button {
-    width: 100%; /* Full width buttons */
-    background-color: transparent; /* Make it transparent */
-    border: none; /* No border */
-    color: #ff7f50; /* Orange color for text */
+    background-color: #f6b17a; /* Button background color */
+    border: none; /* Remove border */
+    color: #131722; /* Button text color */
     cursor: pointer;
     padding: 10px;
-    text-align: left; /* Align text to the left */
+    text-align: left;
+    border-radius: 5px; /* Rounded button edges */
+    transition: background-color 0.3s; /* Smooth transition for hover */
   }
   
   .modal-options button:hover {
-    background-color: rgba(255, 127, 80, 0.1); /* Slight background on hover */
+    background-color: #ff7f50; /* Change background on hover */
   }
   
