@@ -13,6 +13,7 @@ import Portfolio from './screens/Portfolio';
 import TemplateScreen from './screens/TemplateScreen';
 import ProtectedRoute from './components/ProtectedRoutes';  // Import ProtectedRoute
 import AccountPage from './screens/AccountPage';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
 

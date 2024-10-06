@@ -1,0 +1,453 @@
+.landing-page {
+    background-color: #131722;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.landing-top-bar {
+    background-color: #131722; /* Dark background */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Adjust padding if necessary */
+    margin-bottom: 40px; /* Same margin-bottom */
+}
+
+.landing-top-bar-left {
+    display: flex;
+    align-items: center; /* Align items vertically */
+}
+
+.logo {
+    margin-right: 15px; /* Space between logo and button */
+    height: 95px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.templates-btn {
+    flex: 1 ;
+    min-width: 350px;
+    max-width: 400px;
+    height: 50px;
+}
+
+.landing-top-bar-right {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: flex-end; /* Aligns the login button to the right */
+}
+
+.landing-top-bar-btn {
+    background-color: #7077a1; /* Match the background color */
+    color: #fff;
+    border: 2px solid #f6b17a; /* Same border for consistency */
+    border-radius: 30px; /* Same rounded edges */
+    padding: 12px 20px; /* Adjust padding to modify size */
+    font-size: 1.2em; /* Match font size */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 5px; /* Space between buttons */
+    text-align: center; /* Center text */
+}
+
+.login-btn {
+    min-width: 150px; /* Minimum width for the login button */
+    max-width: 200px; /* Maximum width for consistency */
+    height: 50px; /* Set a specific height */
+}
+
+.landing-top-bar-btn:hover {
+    background-color: #f6b17a; /* Hover effect */
+    color: #131722; /* Dark text on hover */
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+@media (max-width: 600px) {
+    .templates-btn,
+    .login-btn {
+        width: 100%; /* Full width on smaller screens */
+        min-width: unset; /* Remove minimum width */
+        height: 50px; /* Consistent height */
+        margin: 5px 0; /* Adjust margin for spacing */
+    }
+}
+
+
+/* Adjusting the background gradient for the ovals */
+.landing-gradient-shape {
+    position: absolute;
+    width: 180px; /* Adjust width */
+    height: 80px; /* Adjust height */
+    border-radius: 50%;
+    background: linear-gradient(180deg, #424769, #766276);
+    opacity: 0.9; /* Slight transparency */
+    z-index: 5; /* Keep them above the text */
+}
+
+/* Positioning the shapes around the text */
+.landing-shape-left-top {
+    top: 10%;
+    left: -3%;
+    transform: translate(-50%, -50%) rotate(30deg);
+}
+
+.landing-shape-left-bottom {
+    top: 50%;
+    left: -3%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+}
+
+.landing-shape-right-top {
+    top: 10%;
+    right: -2%;
+    transform: translate(50%, -50%) rotate(-30deg);
+}
+
+.landing-shape-right-bottom {
+    top: 50%;
+    right: -3%;
+    transform: translate(50%, -50%) rotate(30deg);
+}
+
+/* Yung find chuchu it2 */
+.landing-centered-text {
+    position: relative;
+    top: -70%; /* Adjust this to control vertical positioning */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ccd2e5; /* Light grey-blue color similar to the image */
+    font-size: 2.5rem;
+    text-align: center;
+    z-index: 10;
+    line-height: 1.5;
+    max-width: 80%; /* Prevents overflow for longer text */
+    font-weight: 400; /* Adjust font weight to match the sleek look */
+}
+
+
+
+.landing-description-text {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: #c0c0c0;
+}
+
+/* Sign-up button with sparkling effect */
+.landing-sign-up-btn {
+    margin-top: 1.5rem;
+    margin-left: 20px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient color */
+    border: none;
+    color: white;
+    padding: 0.7rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4); /* Soft shadow */
+    transition: all 0.3s ease;
+}
+
+.landing-sign-up-btn:hover {
+    background: linear-gradient(135deg, #feb47b, #ff7e5f);
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(255, 126, 95, 0.6);
+}
+
+.sparkle-effect::before {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: sparkle 1s infinite ease-in-out;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; transform: translateY(-10px); }
+}
+
+
+
+
+/* Social Media Cards Container */
+.landing-social-media-cards-container {
+    display: flex;
+    align-items: flex-end; /* Align social cards to the bottom of their container */
+    justify-content: flex-start;
+    padding: 2rem;
+    height: 100vh; /* Full height to keep alignment with portfolio */
+    position: relative; /* To allow fine-tuned adjustments */
+}
+/* Yung soc med card dito is yung outside ng card if gusto mo taas or baba */
+.landing-social-media-cards {
+    position: relative; /* Change from absolute to relative */
+    height: 100px; /* Adjust as needed */
+    width: 150px; /* Adjust as needed */
+    margin-bottom: 2rem; /* Increase bottom margin for more space */
+    margin-top: auto; /* Allow the container to take up remaining space and move it down */
+    display: flex;
+    flex-direction: column; /* Stack cards vertically if needed */
+}
+/* Yung dito adjustment ng mismong card */
+.landing-social-card {
+    position: absolute;
+    width: 300px; /* Increased width */
+    height: 200px; /* Adjusted height */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+    transform: scale(0.8);
+    animation: landing-card-slide 6s infinite ease-in-out;
+}
+
+@keyframes landing-card-slide {
+    0% {
+        transform: translateY(0px) scale(1);
+        z-index: 3;
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(-20px) scale(0.95);
+        z-index: 2;
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateY(-40px) scale(0.9);
+        z-index: 1;
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+        z-index: 3;
+        opacity: 1;
+    }
+}
+
+/* Adjusting other card styles as needed */
+.landing-social-card:nth-child(1) {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    animation-delay: 0s;
+}
+
+.landing-social-card:nth-child(2) {
+    background-color: #1da1f2;
+    animation-delay: 1.5s;
+}
+
+.landing-social-card:nth-child(3) {
+    background-color: #ff0000;
+    animation-delay: 3s;
+}
+
+.landing-social-card:nth-child(4) {
+    background-color: #69c9d0;
+    animation-delay: 4.5s;
+}
+
+
+@keyframes landing-card-slide {
+    0% {
+        transform: translateY(0px) scale(1);
+        z-index: 3;
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(-20px) scale(0.95);
+        z-index: 2;
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateY(-40px) scale(0.9);
+        z-index: 1;
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+        z-index: 3;
+        opacity: 1;
+    }
+}
+
+/* Adjust the portfolio card positioning */
+.landing-portfolio-section {
+    position: absolute;
+    top: 120%; /* Move this lower (increase the percentage) */
+    right: 2%; /* Keep it on the right side */
+    transform: translateY(-50%);
+    padding-right: 20px;
+}
+
+/* Adjusting the dumbbell image relative to the portfolio */
+.landing-dumbbell-img {
+    position: absolute;
+    top: -100px; /* Adjusted to prevent overlap */
+    right: -150px;
+    width: 450px; /* Adjust image size if necessary */
+    z-index: 0;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .landing-portfolio-section {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin-top: 2rem;
+        text-align: center; /* Center-align for smaller screens */
+    }
+
+    .landing-dumbbell-img {
+        display: none; /* Hide dumbbell on smaller screens */
+    }
+}
+
+
+/* Adjusting the portfolio card */
+.landing-portfolio-card {
+    background-color: #424769;
+    width: 300px;
+    height: 400px;
+    border: none;
+    padding: 2rem;
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative; /* Adjusted for proper shape positioning */
+}
+
+/* Oval shape stand styling */
+.landing-oval-shape {
+    position: absolute;
+    bottom: -30px; /* Positioned slightly below the portfolio card */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 50px;
+    background-color: #ffba5a;
+    border-radius: 50%;
+    z-index: -1; /* Positioned behind the portfolio card */
+}
+
+
+/* Adjusting the avatar size and alignment */
+.landing-portfolio-avatar {
+    width: 160px;
+    height: 150px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.landing-rectangular-shape {
+    position: absolute;
+    bottom: -20px; /* Positioned at the bottom of the portfolio card */
+    left: 10%; /* Positioned on the left side of the card */
+    width: 100px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.7);
+    transform: rotate(-10deg);
+    z-index: -1; /* Positioned behind the card */
+}
+
+/* Centering the text inside the card */
+.landing-portfolio-info {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.landing-portfolio-info h5 {
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Buttons inside the portfolio card */
+.landing-portfolio-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Space between buttons */
+    margin-top: -20px; /* Space above buttons */
+}
+.landing-portfolio-btn {
+    background-color: #ffba5a;
+    border: none;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.landing-portfolio-btn:hover {
+    background-color: #fff;
+    color: #ffba5a;
+}
+
+/* Customize Portfolio Section */
+/* Wrapper for portfolio and message */
+.portfolio-wrapper {
+    position: relative; /* Allows absolute positioning inside */
+}
+
+/* Portfolio container */
+.portfolio-container {
+    /* Your existing portfolio styles */
+    position: relative;
+    z-index: 1; /* To ensure it's on top */
+}
+
+/* The message container - positioned on the lower left outside the portfolio */
+.customize-portfolio-left {
+    height: 150px;
+    top: 380px;
+    position: absolute;
+    bottom: -40px;
+    left: -250px;
+    background-color: #7077a1;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+}
+
+/* The message text styling */
+.customize-portfolio-title {
+    font-size: 1.2rem;
+    color: white;
+    text-align: left;
+}
+
+
+
+  
+
+/* Footer */
+.landing-footer {
+    background-color: #1f2636;
+    padding: 1rem 2rem;
+    color: #fff;
+    text-align: center;
+    margin-top: -130px;  /* Adjust this value to your liking */
+}
