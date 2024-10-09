@@ -7,9 +7,9 @@ import { useAuth } from '../components/AuthContext';
 import { Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import templates from '../components/templates'; 
-import logo from '../images/porthub_logo.png'
 import '../css/Template.css';
 import '../css/CardButton.css';
+import Header from '../components/Header';
 
 
 const Template = () => {
@@ -71,18 +71,9 @@ const Template = () => {
 
   return (
     <body id="templatebody">
-      <div id="nav">
-            <img src={logo} alt="Logo" id="logo" />
-            <div id="topcontainer">
-              <div id="innercon">
-                <h1 id="highlight">Templates</h1>
-                <h1>Portfolio</h1>
-              </div>
-            </div>
-            <div id="signoutcon">
-                <button id="signoutbutton" onClick={() => navigate('/logout')}>Sign out</button>
-            </div>
-      </div>
+
+        <Header screen="template" />
+      
     <div id="portcon">
     <div id="cardcon">
   <div className="template-card" onClick={() => navigate('/edit')}>

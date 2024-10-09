@@ -45,6 +45,7 @@
     margin: 0 auto;
     align-items: center;
     min-height: 90dvh;
+    padding-bottom: 2rem;
 }
 
 #topcontainer {
