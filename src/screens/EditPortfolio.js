@@ -7,6 +7,7 @@ import { Button, Container } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom'; // Import useParams to get the templateId from the URL
 import templates from '../components/templates'; // Import your template list
 import logo from '../images/porthub_logo.png';
+import '../css/EditPortfolio.css';
 
 const EditPortfolio = () => {
   const { user } = useAuth();
@@ -105,15 +106,7 @@ const EditPortfolio = () => {
       <Button onClick={() => handleAddElement('text')}>Add Text</Button>
       <Button onClick={() => handleAddElement('image')}>Add Image</Button>
 
-      <div
-        style={{
-          border: '1px solid #ccc',
-          height: '600px',
-          position: 'relative',
-          marginTop: '20px',
-          overflow: 'hidden', // Ensure overflow is hidden
-        }}
-      >
+      <div id="canvas">
         {elements.map((element) => (
           <Rnd
             key={element.id}
@@ -181,7 +174,7 @@ const EditPortfolio = () => {
                 style={{ position: 'absolute', top: 0, right: 0 }}
                 onClick={() => handleDeleteElement(element.id)}
               >
-                Delete
+                <i class="fa fa-trash" aria-hidden="true"></i>
               </Button>
             </div>
           </Rnd>
