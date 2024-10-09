@@ -253,3 +253,238 @@ html, body {
   height: 100%;
   object-fit: cover; /* Ensures the image fills the circle properly */
 }
+
+.portfolio-container {
+  display: flex;
+}
+
+/* .sidebar-oblong {
+  width: 20%;
+  background-color: #3f466b;
+  padding: 15px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+}
+
+.left-content {
+  width: 40%;
+  background-color: #3f466b;
+  padding: 20px;
+} */
+
+.element-row {
+  display: flex;
+  gap: 15px;
+}
+
+.element-block {
+  width: 120px;
+  height: 80px;
+  background-color: #7cc2a1;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  cursor: grab;
+}
+
+.drop-area {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #ccc;
+  position: relative;
+  overflow: hidden; /* Prevent elements from overflowing */
+  background-color: #f9f9f9; /* Light background for visibility */
+}
+
+.dropped-element input {
+  width: 100%; /* Full width of the container */
+  height: 100%; /* Full height of the container */
+  border: none; /* Remove default border */
+  outline: none; /* Remove default outline */
+  resize: none; /* Prevent resizing of input box */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+  font-size: 1em; /* Set a consistent font size */
+  color: inherit; /* Inherit text color from parent */
+  font-family: inherit; /* Inherit font family from parent */
+  padding: 0; /* Remove padding to fill the box */
+  margin: 0; /* Remove margin to fill the box */
+  display: flex; /* Use flexbox */
+  align-items: left; /* Center the content vertically */
+  justify-content: center; /* Center the content horizontally */
+}
+
+
+.dropped-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f6b17a;
+  color: #131722;
+  font-weight: bold;
+  cursor: grab;
+  margin: 10px 0;
+  width: 100px; /* Adjust the width to represent the shape size */
+  height: 100px; /* Adjust the height to represent the shape size */
+}
+
+.dropped-element.square-textbox {
+  width: 150px;
+  height: 150px;
+}
+
+.dropped-element.circle-textbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.dropped-element.rounded-textbox {
+  width: 200px;
+  height: 100px;
+  border-radius: 15px;
+}
+
+.resize-handle {
+  width: 12px;
+  height: 12px;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6v6h6"/><path d="M6 18v6h6"/></svg>');
+  cursor: nwse-resize;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-color: transparent;
+  transform: rotate(315deg); /* Rotate to point at 315 degrees */
+}
+
+
+
+
+
+.theme-content-container {
+  background-color: #424769; /* Change to match the elements section */
+  padding: 20px; /* Match padding for consistency */
+  border-radius: 15px; /* Match border radius */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Match box shadow */
+  margin-bottom: 20px; /* Space below the theme container */
+}
+
+.theme-content-container label {
+  display: block; /* Ensure labels stack */
+  margin-bottom: 10px; /* Space between labels */
+  color: #f6f6f6; /* Change label color to match theme */
+  font-weight: bold; /* Make labels stand out */
+}
+
+
+.theme-section {
+  background-color: #424769; /* Background color for the theme section */
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px; /* Space inside the container */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Elements Section */
+.elements-section {
+  background-color: #424769; /* Background color for the elements section */
+  border-radius: 15px; /* Rounded corners */
+  padding: 20px; /* Space inside the container */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Form Elements within Theme Section */
+.theme-content label {
+  display: block; /* Ensures labels stack vertically */
+  margin-bottom: 10px; /* Space below labels */
+  color: #f6f6f6; /* Label color */
+  font-weight: bold; /* Make labels stand out */
+}
+
+/* Input Fields within Theme Section */
+.theme-content input[type="color"],
+.theme-content select {
+  width: 100%; /* Full width for inputs */
+  padding: 10px; /* Padding for comfort */
+  border: 1px solid #ccc; /* Standard border */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 15px; /* Space below inputs */
+  background-color: #ffffff; /* White background for inputs */
+}
+
+/* Hover effect for element blocks */
+.element-block:hover {
+  background-color: #66a3a1; /* Change color on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+/* Styling for dropped elements */
+.dropped-element {
+  padding: 5px; /* Less padding for a compact look */
+  border: 2px solid #ccc; /* Solid border around dropped elements */
+  background-color: #6a994e; /* Background color */
+  transition: all 0.2s; /* Transition for hover effects */
+  cursor: grab;
+}
+
+.dropped-element:active {
+  cursor: grabbing; /* Set cursor to grabbing while dragging */
+}
+
+.dropped-element:hover {
+  transform: scale(1.02); /* Slight zoom effect on hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow on hover */
+}
+
+/* Adjustments for resize handle */
+.resize-handle:hover {
+  background: #007bff; /* Change color on hover */
+}
+
+.element-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f6b17a;
+  color: #131722;
+  font-weight: bold;
+  cursor: grab;
+  margin: 10px 0;
+  width: 100px; /* Adjust the width to represent the shape size */
+  height: 100px; /* Adjust the height to represent the shape size */
+}
+
+.textbox-block {
+  border: 2px solid #fff;
+  text-align: center;
+}
+
+.square-textbox {
+  border-radius: 0;
+  background-color: #1dd1a1; /* Example color for rounded textbox */
+}
+
+.circle-textbox {
+  border-radius: 50%;
+  background-color: #1dd1a1; /* Example color for rounded textbox */
+}
+
+.rounded-textbox {
+  border-radius: 15px;
+  background-color: #1dd1a1; /* Example color for rounded textbox */
+}
+
+/* Hover effect for element blocks */
+.element-block:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+

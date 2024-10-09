@@ -1,0 +1,255 @@
+html, body {
+    background-color: #131722;
+  }
+  
+  /* Top Navbar */
+  .top-navbar {
+    height: 60px; /* Set the height of the top navbar */
+    background-color: #424769; /* Navbar background color */
+    color: white; /* Text color */
+    display: flex;
+    align-items: center; /* Center items vertically */
+    padding: 0 20px; /* Horizontal padding */
+    position: fixed; /* Fixed positioning */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    right: 0; /* Align to the right */
+    z-index: 1000; /* Ensure it stays above other content */
+  }
+  
+  /* Top Navbar Title */
+  .top-navbar h1 {
+    font-size: 1.5em; /* Font size for the title */
+    margin: 0; /* Remove margin */
+  }
+  
+  /* Portfolio Container */
+  .portfolio-container {
+    display: flex;
+    height: 100vh;
+    background-color: #131722;
+    padding-top: 60px; /* Add space for the top navbar */
+  }
+  
+  /* Sidebar styling */
+  .sidebar-oblong {
+    width: 100px;
+    background-color: #7077a1; /* Slightly darker for more contrast */
+    height: 90vh;
+    margin: 20px; /* Space around the sidebar */
+    padding: 20px 10px;
+    color: white;
+    border-radius: 30px; /* Softer corners */
+    border: 2px solid #f6b17a; /* Border color for professionalism */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15); /* Floating shadow effect */
+    transition: all 0.3s ease; /* Smooth hover effects */
+  }
+  
+  /* Optional Hover Effect */
+  .sidebar-oblong:hover {
+    transform: translateY(-5px); /* Slight upward lift on hover */
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+  
+  /* Sidebar Link Styling */
+  .sidebar-nav .sidebar-link {
+    color: #f6f6f6; /* Set text color to match the profile, theme, and elements headings */
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5px;
+  }
+  
+  .sidebar-nav .sidebar-link .nav-icon {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+  }
+  
+  .sidebar-nav .sidebar-link .nav-text {
+    font-size: 0.9em;
+  }
+  
+  /* Sidebar Link Active/ Hover Effect */
+  .sidebar-nav .sidebar-link.active,
+  .sidebar-nav .sidebar-link:hover {
+    background-color: rgba(45, 50, 80, 0.38); /* 38% opacity */
+    border-radius: 15px;
+    transform: scale(1.05);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Sidebar Footer */
+  .sidebar-footer {
+    text-align: center;
+    margin-top: auto;
+  }
+  
+  /* Footer Icon */
+  .footer-icon {
+    height: 70px; /* Adjust size */
+    width: 70px; /* Adjust size */
+    border-radius: 50%; /* Circular shape */
+    overflow: hidden; /* Prevent overflow */
+    margin: 0 auto; /* Center horizontally */
+  }
+  
+  /* Main Content Area */
+  .main-content {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 60px); /* Subtract height of the top navbar */
+    width: 100%;
+    padding: 40px;
+    justify-content: space-between;
+    background-color: #131722;
+    gap: 20px;
+  }
+  
+  /* Left Content */
+  .left-content {
+    flex-basis: 65%; /* Larger left section */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Right Content - User Info Section */
+  .right-content {
+    position: fixed; /* Fixes the User Info on the right */
+    right: 20px; /* Keeps it fixed 20px from the right edge */
+    top: 80px; /* Aligns it below the top navbar */
+    width: 30%; /* Adjust the width as per your needs */
+  }
+  
+  .user-info-section {
+    width: 100%;
+  }
+  
+  /* Adjustments to user-info card to align top */
+  .user-info-card {
+    background-color: #424769;
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column; /* Ensures content stacks vertically */
+    align-items: flex-start; /* Align user image and details at the top */
+    margin-bottom: 20px;
+    height: 570px; /* Allows height to adjust based on content */
+    min-height: 200px; /* Optional minimum height */
+  }
+  
+  .user-image {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Make height and width equal for a circle */
+    border-radius: 50%; /* Makes the image circular */
+    background-color: #ccc;
+    margin-right: 20px;
+    overflow: hidden; /* Ensures the image doesn't overflow outside the circle */
+  }
+  
+  .user-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the circle properly */
+  }
+  
+  .user-image-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #424769;
+  }
+  
+  .user-details {
+    font-size: 0.9em;
+  }
+  
+  /* Edit Profile Section */
+  .edit-profile-section {
+    background-color: #424769;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+  }
+  
+  /* Input Field Styling */
+  .input-field {
+    width: 100%;          /* Makes the input field take the full width of its parent */
+    height: 40px;        /* Adjusts the height of the input field */
+    padding: 10px;       /* Adds padding inside the input field for better spacing */
+    border: 1px solid #ccc; /* Standard border */
+    border-radius: 5px;  /* Rounds the corners */
+    font-size: 16px;     /* Increases font size for better readability */
+    box-sizing: border-box; /* Ensures padding is included in the total width and height */
+  }
+  .input-field:focus {
+    border-color: #007bff; /* Border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Shadow effect */
+  }
+  
+  /* Form Group Styling */
+  .form-group {
+    margin-bottom: 15px; /* Space between input fields */
+  }
+  
+  /* Theme Section */
+  .theme-section {
+    background-color: #424769;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Elements Section */
+  .elements-section {
+    background-color: #424769;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Button Styling */
+  .btn {
+    border-radius: 20px;
+  }
+  
+  .input-field {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Sidebar Footer Image */
+  .footer-icon {
+    width: 75px; /* Adjust size as needed */
+    height: 75px; /* Make height and width equal for a circle */
+    border-radius: 50%; /* Makes the image circular */
+    background-color: #ccc;
+    margin-right: 0;
+    overflow: hidden; /* Ensures the image doesn't overflow outside the circle */
+  }
+  
+  .footer-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the circle properly */
+  }

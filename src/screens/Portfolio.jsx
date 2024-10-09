@@ -1,45 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { Nav, Form, Button } from 'react-bootstrap';
-import '../css/Portfolio.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPalette, faShapes } from '@fortawesome/free-solid-svg-icons';
-import Navbar from './Navbar'; // Import Navbar here
-import { auth } from '../firebase'; // Ensure Firebase auth is imported
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { onAuthStateChanged } from 'firebase/auth';
+import React, { useState, useEffect } from "react";
+import { Nav } from "react-bootstrap";
+import "../css/Portfolio.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "./Navbar";
+import { auth } from "../firebase";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc
+import { onAuthStateChanged } from "firebase/auth";
 
 const Portfolio = () => {
   const [profile, setProfile] = useState({
-    name: '',
-    age: '',
-    bio: '',
+    name: "",
+    age: "",
+    bio: "",
     image: null,
-    profilePictureUrl: '', // For storing image URL
-    font: 'Arial', // Default font
-    color: '#000000', // Default color
-    links: [''], // Initialize links as an array
+    profilePictureUrl: "",
   });
 
-  const [activeSection, setActiveSection] = useState(''); // Initially no active section
-  const [hoverSection, setHoverSection] = useState(''); // Track which section is being hovered
+  const [activeSection, setActiveSection] = useState("");
+  const [hoverSection, setHoverSection] = useState("");
+  const [draggedElement, setDraggedElement] = useState(null);
+  const [droppedElements, setDroppedElements] = useState([]);
+  const [isResizing, setIsResizing] = useState(false);
+  const [draggingElement, setDraggingElement] = useState(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [dropAreaColor, setDropAreaColor] = useState("#ffffff");
+  const [selectedElementId, setSelectedElementId] = useState(null);
 
   const db = getFirestore();
-  const storage = getStorage();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const docRef = doc(db, 'users', user.uid);
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setProfile((prevProfile) => ({
             ...prevProfile,
             ...docSnap.data(),
-            links: docSnap.data().links || [''], // Ensure links are an array
+            links: docSnap.data().links || [""],
           }));
+          // Load existing dropped elements and background color from Firestore
+          if (docSnap.data().droppedElements) {
+            setDroppedElements(docSnap.data().droppedElements);
+          }
+          if (docSnap.data().dropAreaColor) {
+            setDropAreaColor(docSnap.data().dropAreaColor); // Load background color
+          }
         } else {
-          console.log('No such document!');
+          console.log("No such document!");
         }
       }
     });
@@ -47,116 +56,191 @@ const Portfolio = () => {
     return () => unsubscribe();
   }, [db]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value,
-    }));
+  const handleSectionClick = (section) => {
+    setActiveSection(section);
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const dataUrl = reader.result; // This will give you the data URL of the file
+  const handleDragStart = (e, element) => {
+    setDraggedElement(element);
+    e.dataTransfer.effectAllowed = "move";
+  };
 
-        // Uploading the data URL to Firebase Storage
-        const storageRef = ref(storage, `profilePictures/${auth.currentUser.uid}`);
-        await uploadString(storageRef, dataUrl, 'data_url'); // Ensure the data URL is in the correct format
-        const url = await getDownloadURL(storageRef);
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const dropArea = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - dropArea.left;
+    const y = e.clientY - dropArea.top;
 
-        setProfile((prevProfile) => ({
-          ...prevProfile,
-          profilePictureUrl: url,
-        }));
-      };
-
-      reader.readAsDataURL(file); // This will read the file as a data URL
+    if (draggedElement) {
+      setDroppedElements((prevElements) => [
+        ...prevElements,
+        {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 50 },
+          text: "",
+          color: "#1dd1a1", // Default shape color
+          fontColor: "#000000", // Default font color
+          textFont: "Arial", // Default font family
+        },
+      ]);
+      setDraggedElement(null);
     }
   };
 
-  const handleSectionClick = (section) => {
-    setActiveSection(section); // Set the active section to be displayed
+  const handleTextChange = (id, newText) => {
+    setDroppedElements((prevElements) =>
+      prevElements.map((element) =>
+        element.id === id ? { ...element, text: newText } : element
+      )
+    );
   };
 
-  const determineDisplayedSection = () => {
-    return hoverSection || activeSection;
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+  const startResizing = (e, element) => {
+    e.preventDefault(); // Prevent default behavior
+    e.stopPropagation(); // Prevent triggering drag events
+    setIsResizing(true); // Set resizing mode
+
+    const initialWidth = element.size.width;
+    const initialHeight = element.size.height;
+    const initialX = e.clientX;
+    const initialY = e.clientY;
+
+    // Add the mousemove event listener to the document to track the resizing
+    const mouseMoveHandler = (event) => {
+      const newWidth = Math.max(50, initialWidth + (event.clientX - initialX));
+      const newHeight = Math.max(
+        50,
+        initialHeight + (event.clientY - initialY)
+      );
+      handleResize(element.id, newWidth, newHeight); // Continuously resize
+    };
+
+    // Once mouse is released, stop resizing and remove listeners
+    const mouseUpHandler = () => {
+      setIsResizing(false); // End resizing
+      document.removeEventListener("mousemove", mouseMoveHandler); // Remove mousemove listener
+      document.removeEventListener("mouseup", mouseUpHandler); // Remove mouseup listener
+    };
+
+    // Attach the event listeners to track mouse movement
+    document.addEventListener("mousemove", mouseMoveHandler);
+    document.addEventListener("mouseup", mouseUpHandler);
   };
 
+  // Handles resizing the element's dimensions
+  const handleResize = (id, width, height) => {
+    setDroppedElements((prevElements) =>
+      prevElements.map((element) =>
+        element.id === id ? { ...element, size: { width, height } } : element
+      )
+    );
+  };
+
+  // Prevent drag if resizing is happening
+  const handleElementDragStart = (e, element) => {
+    if (isResizing) return; // Prevent dragging if resizing is happening
+
+    e.preventDefault(); // Prevent default drag behavior
+
+    setDraggingElement(element.id);
+
+    const dropArea = e.currentTarget.parentElement.getBoundingClientRect();
+    const offsetX = e.clientX - dropArea.left - element.position.x;
+    const offsetY = e.clientY - dropArea.top - element.position.y;
+
+    const moveElement = (event) => {
+      const newX = event.clientX - dropArea.left - offsetX;
+      const newY = event.clientY - dropArea.top - offsetY;
+
+      requestAnimationFrame(() => {
+        setDroppedElements((prevElements) =>
+          prevElements.map((el) =>
+            el.id === element.id
+              ? { ...el, position: { x: newX, y: newY } }
+              : el
+          )
+        );
+      });
+    };
+
+    const stopDragging = () => {
+      setDraggingElement(null);
+      document.removeEventListener("mousemove", moveElement);
+      document.removeEventListener("mouseup", stopDragging);
+    };
+
+    document.addEventListener("mousemove", moveElement);
+    document.addEventListener("mouseup", stopDragging);
+  };
+
+  // Handles resizing the element's dimensions
+
+  const clearSelectedElement = () => {
+    setSelectedElementId(null);
+  };
+
+  const handleTextBoxClick = (id) => {
+    setSelectedElementId(id);
+  };
+
+  const handleShapeColorChange = (id, color) => {
+    setDroppedElements((prevElements) =>
+      prevElements.map((element) =>
+        element.id === id ? { ...element, color } : element
+      )
+    );
+  };
+
+  // New save function
   const handleSave = async () => {
     const user = auth.currentUser;
-    if (!user) return;
-
-    try {
-      await setDoc(doc(db, 'users', user.uid), profile);
-      alert('Profile saved successfully!');
-    } catch (error) {
-      console.error('Error saving profile:', error);
-      alert('Error saving profile. Please try again.');
+    if (user) {
+      const docRef = doc(db, "users", user.uid);
+      await setDoc(
+        docRef,
+        {
+          ...profile,
+          dropAreaColor, // Add dropAreaColor to the saved data
+          droppedElements,
+        },
+        { merge: true }
+      ); // Merge to keep existing data and add new
+      alert("Portfolio saved successfully!");
+    } else {
+      alert("You need to be logged in to save your portfolio.");
     }
-  };
-
-  const handleAddLink = () => {
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      links: [...prevProfile.links, ''], // Add a new empty link
-    }));
-  };
-
-  const handleLinkChange = (e, index) => {
-    const newLinks = [...profile.links];
-    newLinks[index] = e.target.value; // Update the link at the specified index
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      links: newLinks,
-    }));
-  };
-
-  const handleRemoveLink = (index) => {
-    const newLinks = profile.links.filter((_, i) => i !== index); // Remove link at specified index
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      links: newLinks,
-    }));
   };
 
   return (
     <div className="portfolio-container">
-      <Navbar /> {/* Place Navbar here to display at the top of the Portfolio page */}
-
-      {/* Sidebar */}
+      <Navbar />
       <div className="sidebar-oblong">
         <Nav className="flex-column sidebar-nav">
           <Nav.Link
-            href="#profile"
-            className={`sidebar-link ${activeSection === 'profile' ? 'active' : ''} ${hoverSection === 'profile' ? 'hover' : ''}`}
-            onClick={() => handleSectionClick('profile')}
-            onMouseEnter={() => setHoverSection('profile')}
-            onMouseLeave={() => setHoverSection('')}
-          >
-            <FontAwesomeIcon icon={faUser} className="nav-icon" />
-            <span className="nav-text">Profile</span>
-          </Nav.Link>
-
-          <Nav.Link
             href="#theme"
-            className={`sidebar-link ${activeSection === 'theme' ? 'active' : ''} ${hoverSection === 'theme' ? 'hover' : ''}`}
-            onClick={() => handleSectionClick('theme')}
-            onMouseEnter={() => setHoverSection('theme')}
-            onMouseLeave={() => setHoverSection('')}
+            className={`sidebar-link ${
+              activeSection === "theme" ? "active" : ""
+            } ${hoverSection === "theme" ? "hover" : ""}`}
+            onClick={() => handleSectionClick("theme")}
+            onMouseEnter={() => setHoverSection("theme")}
+            onMouseLeave={() => setHoverSection("")}
           >
             <FontAwesomeIcon icon={faPalette} className="nav-icon" />
             <span className="nav-text">Theme</span>
           </Nav.Link>
-
           <Nav.Link
             href="#elements"
-            className={`sidebar-link ${activeSection === 'elements' ? 'active' : ''} ${hoverSection === 'elements' ? 'hover' : ''}`}
-            onClick={() => handleSectionClick('elements')}
-            onMouseEnter={() => setHoverSection('elements')}
-            onMouseLeave={() => setHoverSection('')}
+            className={`sidebar-link ${
+              activeSection === "elements" ? "active" : ""
+            } ${hoverSection === "elements" ? "hover" : ""}`}
+            onClick={() => handleSectionClick("elements")}
+            onMouseEnter={() => setHoverSection("elements")}
+            onMouseLeave={() => setHoverSection("")}
           >
             <FontAwesomeIcon icon={faShapes} className="nav-icon" />
             <span className="nav-text">Elements</span>
@@ -165,7 +249,11 @@ const Portfolio = () => {
         <div className="sidebar-footer">
           <div className="footer-icon">
             {profile.profilePictureUrl ? (
-              <img src={profile.profilePictureUrl} alt="Profile" className="footer-profile-image" />
+              <img
+                src={profile.profilePictureUrl}
+                alt="Profile"
+                className="footer-profile-image"
+              />
             ) : (
               <div className="footer-image-placeholder">No Image</div>
             )}
@@ -173,142 +261,187 @@ const Portfolio = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="main-content">
         <div className="left-content">
-          {determineDisplayedSection() === 'profile' && (
-            <div className="profile-content">
-              <div className="edit-profile-section">
-                <h3>Edit Profile</h3>
-                <Form>
-                  <Form.Group className="mb-3" controlId="profilePicture">
-                    <Form.Label>Profile Picture:</Form.Label>
-                    <Form.Control
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="input-field"
+          {activeSection === "theme" && (
+            <div className="theme-content-container">
+              <h3>{selectedElementId ? "Theme" : "Theme"}</h3>
+              {selectedElementId ? (
+                <div>
+                  <label>
+                    Font Color:
+                    <input
+                      type="color"
+                      value={
+                        droppedElements.find(
+                          (element) => element.id === selectedElementId
+                        ).fontColor
+                      }
+                      onChange={(e) =>
+                        setDroppedElements((prevElements) =>
+                          prevElements.map((element) =>
+                            element.id === selectedElementId
+                              ? { ...element, fontColor: e.target.value }
+                              : element
+                          )
+                        )
+                      }
                     />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="profileName">
-                    <Form.Label>Name:</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={profile.name}
-                      onChange={handleInputChange}
-                      className="input-field"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="profileAge">
-                    <Form.Label>Age (optional):</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="age"
-                      value={profile.age}
-                      onChange={handleInputChange}
-                      className="input-field"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="profileBio">
-                    <Form.Label>Bio:</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      name="bio"
-                      value={profile.bio}
-                      onChange={handleInputChange}
-                      className="input-field"
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="profileFont">
-                    <Form.Label>Font:</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="font"
-                      value={profile.font}
-                      onChange={handleInputChange}
-                      className="input-field"
+                  </label>
+                  <label>
+                    Text Font:
+                    <select
+                      value={
+                        droppedElements.find(
+                          (element) => element.id === selectedElementId
+                        ).textFont
+                      }
+                      onChange={(e) =>
+                        setDroppedElements((prevElements) =>
+                          prevElements.map((element) =>
+                            element.id === selectedElementId
+                              ? { ...element, textFont: e.target.value }
+                              : element
+                          )
+                        )
+                      }
                     >
                       <option value="Arial">Arial</option>
-                      <option value="Helvetica">Helvetica</option>
                       <option value="Times New Roman">Times New Roman</option>
                       <option value="Courier New">Courier New</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="profileColor">
-                    <Form.Label>Color:</Form.Label>
-                    <Form.Control
+                      <option value="Georgia">Georgia</option>
+                      <option value="Verdana">Verdana</option>
+                    </select>
+                  </label>
+                  <label>
+                    Shape Color:
+                    <input
                       type="color"
-                      name="color"
-                      value={profile.color}
-                      onChange={handleInputChange}
-                      className="input-field"
+                      value={
+                        droppedElements.find(
+                          (element) => element.id === selectedElementId
+                        ).color
+                      }
+                      onChange={(e) =>
+                        handleShapeColorChange(
+                          selectedElementId,
+                          e.target.value
+                        )
+                      }
                     />
-                  </Form.Group>
-
-                  <h3>Links</h3>
-                  {profile.links.map((link, index) => (
-                    <div key={index} className="link-input-container">
-                      <Form.Control
-                        type="text"
-                        value={link}
-                        onChange={(e) => handleLinkChange(e, index)}
-                        placeholder={`Link ${index + 1}`}
-                        className="link-input"
-                      />
-                      <Button variant="danger" onClick={() => handleRemoveLink(index)} className="remove-link-button">Remove</Button>
-                    </div>
-                  ))}
-                  <Button variant="secondary" onClick={handleAddLink} className="add-link-button">Add Link</Button>
-
-                  <Button variant="primary" onClick={handleSave} className="save-button">Save Profile</Button>
-                </Form>
-              </div>
-            </div>
-          )}
-
-          {determineDisplayedSection() === 'theme' && (
-            <div className="theme-content">
-              <h3>Theme Settings</h3>
-              {/* Theme settings components go here */}
-            </div>
-          )}
-
-          {determineDisplayedSection() === 'elements' && (
-            <div className="elements-section">
-              <h3>Elements</h3>
-              <p>Manage your portfolio elements:</p>
-              <div className="elements-options">
-                <Button variant="success">Add Element</Button>
-                <Button variant="danger" className="ml-2">Remove Element</Button>
-              </div>
-            </div>
-          )}
-        </div>
-        
-
-        <div className="user-info-section">
-          {/* Render the user's portfolio based on the profile data */}
-          <div className="user-info-card">
-            <h2>{profile.name}'s Portfolio</h2>
-            <div className="portfolio-image">
-              {profile.profilePictureUrl ? (
-                <img src={profile.profilePictureUrl} alt="Profile" className="portfolio-profile-image" />
+                  </label>
+                </div>
               ) : (
-                <div className="portfolio-image-placeholder">No Image</div>
+                <div>
+                  <label>
+                    Background Color:
+                    <input
+                      type="color"
+                      value={dropAreaColor}
+                      onChange={(e) => setDropAreaColor(e.target.value)}
+                    />
+                  </label>
+                </div>
               )}
             </div>
-            <p className="portfolio-bio">{profile.bio}</p>
-            <h3>Links:</h3>
-            <ul className="portfolio-links">
-              {profile.links.map((link, index) => (
-                <li key={index}>
-                  <a href={link} target="_blank" rel="noopener noreferrer">{link || 'Link Not Provided'}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          )}
+
+          {activeSection === "elements" && (
+            <div className="elements-section">
+              <h3>Elements</h3>
+              <div className="element-row">
+                <div
+                  className="element-block square-textbox"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "square-textbox")}
+                ></div>
+                <div
+                  className="element-block circle-textbox"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "circle-textbox")}
+                ></div>
+                <div
+                  className="element-block rounded-textbox"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
+                ></div>
+              </div>
+            </div>
+          )}
+          <button onClick={handleSave} className="save-button">
+            Save Portfolio
+          </button>
+        </div>
+
+        {/* Right-side Drop Area */}
+        <div
+          className="drop-area"
+          style={{ backgroundColor: dropAreaColor }}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onClick={clearSelectedElement} // Add this line to clear selection
+        >
+          {droppedElements.map((element) => (
+            <div
+              key={element.id}
+              className={`dropped-element ${element.type}`}
+              style={{
+                left: element.position.x,
+                top: element.position.y,
+                position: "absolute",
+                margin: 0,
+                width: element.size.width,
+                height: element.size.height,
+                border: `1em solid ${element.color}`,
+                backgroundColor: element.color,
+                boxSizing: "border-box",
+                cursor: draggingElement ? "grabbing" : "move", // Set cursor when dragging
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTextBoxClick(element.id);
+              }}
+              onDragStart={(e) => handleElementDragStart(e, element)}
+              draggable={!selectedElementId || selectedElementId !== element.id} // Disable dragging while editing text
+            >
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                onClick={(e) => e.stopPropagation()} // Prevent parent click event when editing
+              >
+                <textarea
+                  value={element.text}
+                  onChange={(e) => handleTextChange(element.id, e.target.value)}
+                  style={{
+                    width: "100%", // Match the width of the shape
+                    height: "100%", // Match the height of the shape
+                    border: "none",
+                    outline: "none",
+                    resize: "none", // Disable manual resizing
+                    boxSizing: "border-box",
+                    fontSize: "16px",
+                    color: element.fontColor, // Use individual font color
+                    fontFamily: element.textFont, // Use individual font family
+                    backgroundColor: "transparent", // Transparent background to match shape
+                    overflow: "hidden", // Hide overflow so text wraps inside
+                    cursor: "text", // Text cursor when editing
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTextBoxClick(element.id);
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()} // Prevent dragging when focusing text
+                />
+              </div>
+              <div
+                className="resize-handle"
+                onMouseDown={(e) => startResizing(e, element)}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
