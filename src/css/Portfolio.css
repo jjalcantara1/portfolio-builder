@@ -320,7 +320,7 @@ html, body {
 }
 
 
-.dropped-element {
+/* .dropped-element {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,11 +330,11 @@ html, body {
   font-weight: bold;
   cursor: grab;
   margin: 10px 0;
-  width: 100px; /* Adjust the width to represent the shape size */
-  height: 100px; /* Adjust the height to represent the shape size */
-}
+  width: 100px;
+  height: 100px; 
+} */
 
-.dropped-element.square-textbox {
+/* .dropped-element.square-textbox {
   width: 150px;
   height: 150px;
 }
@@ -349,7 +349,7 @@ html, body {
   width: 200px;
   height: 100px;
   border-radius: 15px;
-}
+} */
 
 .resize-handle {
   width: 12px;
@@ -427,12 +427,32 @@ html, body {
 
 /* Styling for dropped elements */
 .dropped-element {
-  padding: 5px; /* Less padding for a compact look */
-  border: 2px solid #ccc; /* Solid border around dropped elements */
-  background-color: #6a994e; /* Background color */
-  transition: all 0.2s; /* Transition for hover effects */
-  cursor: grab;
+  display: flex;
+  align-items: flex-start; /* Align text at the top */
+  justify-content: center; /* Center horizontally */
+  padding: 0; /* Remove padding */
+  background-color: #1dd1a1; /* Background color for clarity */
+  color: #131722; /* Text color */
+  font-weight: bold;
+  width: 100%; /* Full width of the element */
+  height: 100%; /* Full height of the element */
+  resize: none; /* Disable manual resizing */
 }
+
+/* Ensure the text area fills the container */
+.dropped-element textarea {
+  width: 100%;
+  height: 100%;
+  border: none; /* Remove border */
+  outline: none; /* Remove outline */
+  padding: 10px; /* Optional padding inside the text area */
+  box-sizing: border-box; /* Include padding in the width/height calculation */
+  resize: none; /* Disable resizing */
+  font-size: 1em; /* Adjust font size */
+  background: transparent; /* Make the background transparent to match the parent */
+  color: inherit; /* Inherit text color */
+}
+
 
 .dropped-element:active {
   cursor: grabbing; /* Set cursor to grabbing while dragging */
@@ -448,7 +468,7 @@ html, body {
   background: #007bff; /* Change color on hover */
 }
 
-.element-block {
+/* .element-block {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -458,29 +478,29 @@ html, body {
   font-weight: bold;
   cursor: grab;
   margin: 10px 0;
-  width: 100px; /* Adjust the width to represent the shape size */
-  height: 100px; /* Adjust the height to represent the shape size */
-}
+  width: 100px;
+  height: 100px; 
+} */
 
 .textbox-block {
   border: 2px solid #fff;
   text-align: center;
 }
 
-.square-textbox {
+/* .square-textbox {
   border-radius: 0;
-  background-color: #1dd1a1; /* Example color for rounded textbox */
+  background-color: #1dd1a1; 
 }
 
 .circle-textbox {
   border-radius: 50%;
-  background-color: #1dd1a1; /* Example color for rounded textbox */
+  background-color: #1dd1a1; 
 }
 
 .rounded-textbox {
   border-radius: 15px;
-  background-color: #1dd1a1; /* Example color for rounded textbox */
-}
+  background-color: #1dd1a1;
+} */
 
 /* Hover effect for element blocks */
 .element-block:hover {
@@ -488,3 +508,57 @@ html, body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* General Styling for both drag and drop elements */
+.element-block, .dropped-element {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: grab;
+  transition: all 0.3s ease;
+  color: #fff;
+  background-color: #1dd1a1; /* Set initial color */
+}
+
+/* Styling for the drag area shapes */
+.element-block {
+  width: 150px; /* Set the same width */
+  height: 150px; /* Set the same height */
+  margin: 10px;
+}
+
+/* Specific styling for shape types */
+.square-textbox, .dropped-element.square-textbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 0;
+}
+
+.circle-textbox, .dropped-element.circle-textbox {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.rounded-textbox, .dropped-element.rounded-textbox {
+  width: 200px;
+  height: 100px;
+  border-radius: 15px;
+}
+
+/* Styling for the dropped elements in the drop area */
+.dropped-element {
+  border: 2px solid #f6b17a; /* Solid border for dropped elements */
+  margin: 10px;
+  transition: all 0.2s;
+}
+
+.dropped-element:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow on hover */
+}
+
+/* Resizable handle for dropped elements */
+.resize-handle:hover {
+  background: #007bff; /* Change color on hover */
+}

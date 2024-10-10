@@ -26,6 +26,7 @@ const Portfolio = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dropAreaColor, setDropAreaColor] = useState("#ffffff");
   const [selectedElementId, setSelectedElementId] = useState(null);
+  const [isTextFocused, setIsTextFocused] = useState(false); 
 
   const db = getFirestore();
 
@@ -56,6 +57,24 @@ const Portfolio = () => {
     return () => unsubscribe();
   }, [db]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Backspace" && selectedElementId && !isTextFocused) {
+        // If an element is selected and no text is focused, delete the selected element
+        setDroppedElements((prevElements) =>
+          prevElements.filter((element) => element.id !== selectedElementId)
+        );
+        setSelectedElementId(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedElementId, isTextFocused]);
+
   const handleSectionClick = (section) => {
     setActiveSection(section);
   };
@@ -70,24 +89,54 @@ const Portfolio = () => {
     const dropArea = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - dropArea.left;
     const y = e.clientY - dropArea.top;
-
+  
     if (draggedElement) {
-      setDroppedElements((prevElements) => [
-        ...prevElements,
-        {
+      let newElement;
+  
+      // Assign specific size and style based on shape type
+      if (draggedElement === "square-textbox") {
+        newElement = {
           type: draggedElement,
           id: Date.now(),
           position: { x, y },
-          size: { width: 100, height: 50 },
+          size: { width: 100, height: 100 }, // Square
           text: "",
-          color: "#1dd1a1", // Default shape color
-          fontColor: "#000000", // Default font color
-          textFont: "Arial", // Default font family
-        },
-      ]);
+          color: "#1dd1a1",
+          fontColor: "#000000",
+          textFont: "Arial",
+          borderRadius: "0%", // No rounding for square
+        };
+      } else if (draggedElement === "circle-textbox") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Circle-like dimensions
+          text: "",
+          color: "#1dd1a1",
+          fontColor: "#000000",
+          textFont: "Arial",
+          borderRadius: "50%", // Fully rounded for circle
+        };
+      } else if (draggedElement === "rounded-textbox") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 150, height: 100 }, // Rectangle-like dimensions
+          text: "",
+          color: "#1dd1a1",
+          fontColor: "#000000",
+          textFont: "Arial",
+          borderRadius: "15%", // Slight rounding for rounded rectangle
+        };
+      }
+  
+      setDroppedElements((prevElements) => [...prevElements, newElement]);
       setDraggedElement(null);
     }
   };
+  
 
   const handleTextChange = (id, newText) => {
     setDroppedElements((prevElements) =>
@@ -196,6 +245,8 @@ const Portfolio = () => {
     );
   };
 
+
+
   // New save function
   const handleSave = async () => {
     const user = auth.currentUser;
@@ -286,6 +337,15 @@ const Portfolio = () => {
                           )
                         )
                       }
+                      style={{
+                        border: "0px solid black", // Thicker border to highlight the color
+                        padding: "-1px", // Reduce padding to make the white part thinner
+                        margin: "10px", // Remove any default margins
+                        width: "50px", // Adjust width
+                        height: "25px", // Adjust height
+                        borderRadius: "5px", // Optional: rounded edges
+                        verticalAlign: "middle", // Align the input with the text
+                      }}
                     />
                   </label>
                   <label>
@@ -328,6 +388,15 @@ const Portfolio = () => {
                           e.target.value
                         )
                       }
+                      style={{
+                        border: "0px solid black", // Thicker border to highlight the color
+                        padding: "0px", // Reduce padding to make the white part thinner
+                        margin: "10px", // Remove any default margins
+                        width: "50px", // Adjust width
+                        height: "25px", // Adjust height
+                        borderRadius: "5px", // Optional: rounded edges
+                        verticalAlign: "middle", // Align the input with the text
+                      }}
                     />
                   </label>
                 </div>
@@ -339,6 +408,15 @@ const Portfolio = () => {
                       type="color"
                       value={dropAreaColor}
                       onChange={(e) => setDropAreaColor(e.target.value)}
+                      style={{
+                        border: "0px solid black", // Thicker border to highlight the color
+                        padding: "0px", // Reduce padding to make the white part thinner
+                        margin: "10px", // Remove any default margins
+                        width: "50px", // Adjust width
+                        height: "25px", // Adjust height
+                        borderRadius: "5px", // Optional: rounded edges
+                        verticalAlign: "middle", // Align the input with the text
+                      }}
                     />
                   </label>
                 </div>
@@ -415,6 +493,8 @@ const Portfolio = () => {
                 <textarea
                   value={element.text}
                   onChange={(e) => handleTextChange(element.id, e.target.value)}
+                  onFocus={() => setIsTextFocused(true)}
+                  onBlur={() => setIsTextFocused(false)}
                   style={{
                     width: "100%", // Match the width of the shape
                     height: "100%", // Match the height of the shape

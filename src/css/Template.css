@@ -3,8 +3,6 @@
 #templatebody {
     background-color: #141426;
     height: 100dvh;
-    overflow-y: hidden;
-
 }
 
 #createtemp {
@@ -46,7 +44,7 @@
     justify-content: center;
     margin: 0 auto;
     align-items: center;
-    height: 40dvh;
+    min-height: 90dvh;
 }
 
 #topcontainer {

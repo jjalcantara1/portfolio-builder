@@ -4,18 +4,17 @@ import { db } from '../firebase'; // Import your Firebase config
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
 import { Button, Container } from 'react-bootstrap';
-import { useParams } from 'react-router-dom'; // Import useParams to get the templateId from the URL
+import { useParams, useNavigate } from 'react-router-dom'; // Import useParams to get the templateId from the URL
 import templates from '../components/templates'; // Import your template list
 import logo from '../images/porthub_logo.png';
-import { useNavigate } from 'react-router-dom';
-
+import '../css/EditPortfolio.css';
 
 const EditPortfolio = () => {
   const { user } = useAuth();
   const { templateId } = useParams(); // Get the templateId from the URL
   const [elements, setElements] = useState([]);
+  const [templateStyles, setTemplateStyles] = useState({}); // State to hold template styles
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (user) {
@@ -30,12 +29,13 @@ const EditPortfolio = () => {
     }
   }, [user]);
 
-  // Load selected template elements based on templateId
+  // Load selected template elements and styles based on templateId
   useEffect(() => {
     if (templateId) {
       const selectedTemplate = templates.find((t) => t.id === templateId);
       if (selectedTemplate) {
         setElements(selectedTemplate.elements);
+        setTemplateStyles(selectedTemplate.styles); // Set template styles
       }
     }
   }, [templateId]);
@@ -57,6 +57,15 @@ const EditPortfolio = () => {
     );
   };
 
+  // Handle resize stop
+  const handleResizeStop = (id, width, height, position) => {
+    setElements((prev) =>
+      prev.map((el) =>
+        el.id === id ? { ...el, width, height, x: position.x, y: position.y } : el
+      )
+    );
+  };
+
   // Add new elements
   const handleAddElement = (type) => {
     const newElement = {
@@ -64,6 +73,8 @@ const EditPortfolio = () => {
       type,
       x: 100,
       y: 100,
+      width: 200, // Set default width
+      height: type === 'text' ? 50 : 150, // Set default height based on type
       content: type === 'text' ? 'Sample Text' : '',
     };
     setElements((prev) => [...prev, newElement]);
@@ -76,50 +87,59 @@ const EditPortfolio = () => {
 
   return (
     <Container className="mt-4">
-
-          <div id="nav">
-                      <img src={logo} alt="Logo" id="logo" />
-                      <div id="topcontainer">
-                        <div id="innercon">
-                          <h1>Templates</h1>
-                          <h1 id="highlight">Portfolio</h1>
-                        </div>
-                      </div>
-                      <div id="signoutcon">
-                          <button id="signoutbutton" onClick={() => navigate('/logout')}>Sign out</button>
-                      </div>
-                </div>
+      <div id="nav">
+        <img src={logo} alt="Logo" id="logo" />
+        <div id="topcontainer">
+          <div id="innercon">
+            <h1>Templates</h1>
+            <h1 id="highlight">Portfolio</h1>
+          </div>
+        </div>
+        <div id="signoutcon">
+          <button id="signoutbutton" onClick={() => navigate('/logout')}>
+            Sign out
+          </button>
+        </div>
+      </div>
 
       <h1>Edit Your Portfolio</h1>
       <Button onClick={() => handleAddElement('text')}>Add Text</Button>
       <Button onClick={() => handleAddElement('image')}>Add Image</Button>
 
-      <div
-        style={{
-          border: '1px solid #ccc',
-          height: '600px',
-          position: 'relative',
-          marginTop: '20px',
-        }}
-      >
+      <div id="canvas">
         {elements.map((element) => (
           <Rnd
             key={element.id}
             default={{
               x: element.x,
               y: element.y,
-              width: 200,
-              height: element.type === 'text' ? 50 : 150,
+              width: element.width,
+              height: element.height,
             }}
             onDragStop={(e, d) => handleDragStop(element.id, d)}
+            onResizeStop={(e, direction, ref, delta, position) => {
+              handleResizeStop(element.id, ref.offsetWidth, ref.offsetHeight, position);
+            }}
+            enableResizing={{
+              bottomRight: true,
+              bottomLeft: true,
+              topRight: true,
+              topLeft: true,
+              top: true,
+              right: true,
+              bottom: true,
+              left: true,
+            }}
+            bounds="parent" // Ensure it can be dragged within the parent
           >
             <div
               style={{
-                border: '1px solid #000',
-                backgroundColor: '#fff',
+                ...templateStyles.card,
                 padding: '10px',
                 textAlign: 'center',
                 position: 'relative',
+                height: '100%', // Allow full height
+                width: '100%', // Allow full width
               }}
             >
               {element.type === 'text' && (
@@ -138,7 +158,12 @@ const EditPortfolio = () => {
                 <img
                   src={element.content}
                   alt="Element"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    ...templateStyles.image, // Apply image styles
+                  }}
                 />
               )}
 
@@ -149,7 +174,7 @@ const EditPortfolio = () => {
                 style={{ position: 'absolute', top: 0, right: 0 }}
                 onClick={() => handleDeleteElement(element.id)}
               >
-                Delete
+                <i class="fa fa-trash" aria-hidden="true"></i>
               </Button>
             </div>
           </Rnd>

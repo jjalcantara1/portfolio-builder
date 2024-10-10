@@ -120,3 +120,11 @@ input:-webkit-autofill {
       transform: translateY(0);
     }
   }
+
+  .error-message {
+    color: red;
+    font-size: 0.65rem; /* Make the error message smaller */
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
