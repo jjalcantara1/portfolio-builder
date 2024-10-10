@@ -5,8 +5,9 @@ import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
 import { Button, Container } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom'; // Import useParams to get the templateId from the URL
-import templates from '../components/templates'; // Import your template list
-import logo from '../images/porthub_logo.png';
+import templates from '../components/templates'; 
+import Header from '../components/Header'; 
+
 import '../css/EditPortfolio.css';
 
 const EditPortfolio = () => {
@@ -87,20 +88,8 @@ const EditPortfolio = () => {
 
   return (
     <Container className="mt-4">
-      <div id="nav">
-        <img src={logo} alt="Logo" id="logo" />
-        <div id="topcontainer">
-          <div id="innercon">
-            <h1>Templates</h1>
-            <h1 id="highlight">Portfolio</h1>
-          </div>
-        </div>
-        <div id="signoutcon">
-          <button id="signoutbutton" onClick={() => navigate('/logout')}>
-            Sign out
-          </button>
-        </div>
-      </div>
+      
+      <Header screen="editportfolio" />
 
       <h1>Edit Your Portfolio</h1>
       <Button onClick={() => handleAddElement('text')}>Add Text</Button>
