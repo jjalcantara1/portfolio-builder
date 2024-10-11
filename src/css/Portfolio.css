@@ -286,6 +286,7 @@ html, body {
   min-height: 100vh; /* Make height infinite/scrollable */
   overflow-y: auto;
   flex-grow: 1; /* This allows the drop area to grow */
+  border: 1px solid #ccc;
 }
 
 .drop-area.full-screen {

@@ -497,8 +497,9 @@ const Portfolio = () => {
         <div className={`drop-area ${!isMainContentVisible ? 'full-screen' : ''}`}
             onDrop={handleDrop} 
             onDragOver={handleDragOver} 
-            style={{ backgroundColor: dropAreaColor,transform: `scale(${zoomLevel})`, transformOrigin: 'center', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
+            style={{ backgroundColor: dropAreaColor, transformOrigin: 'top-left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
           >
+          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', overflow: 'hidden',height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}>
           {droppedElements.map((element) => (
             <div
               key={element.id}
@@ -563,6 +564,8 @@ const Portfolio = () => {
             </div>
           ))}
         </div>
+        </div>
+
         </div>
       </div>
     </div>
