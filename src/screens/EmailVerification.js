@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../firebase'; // Ensure correct Firebase imports
+import { auth } from '../firebase';
 import { sendEmailVerification } from 'firebase/auth';
-import { Button, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { FaEnvelope } from 'react-icons/fa';
+import '../css/EmailVerification.css';                  
 
 const EmailVerification = () => {
   const [resendEmail, setResendEmail] = useState(false);
@@ -12,21 +13,19 @@ const EmailVerification = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        // Check if email is verified every time auth state changes
         const checkEmailVerified = () => {
           user.reload().then(() => {
             if (user.emailVerified) {
-              // Redirect to /edit page if email is verified
               navigate('/edit'); 
             }
           });
         };
 
-        checkEmailVerified(); // Check email verification status immediately
+        checkEmailVerified(); 
       }
     });
 
-    return () => unsubscribe(); // Clean up the listener on unmount
+    return () => unsubscribe(); 
   }, [navigate]);
 
   useEffect(() => {
@@ -60,20 +59,22 @@ const EmailVerification = () => {
   };
 
   return (
-    <Container className="mt-5">
-      <h1>Verify Your Email</h1>
-      <p>
-        A verification email has been sent to your email address. Please check your inbox and click the verification link to activate your account.
-      </p>
-      {message && <p>{message}</p>} {/* Show message to user */}
-      <Button onClick={handleResendEmail} disabled={resendEmail}>
-        Resend Verification Email
-      </Button>
-      <br /><br />
-      <Button onClick={() => navigate('/login')}>
-        Go to Login Page
-      </Button>
-    </Container>
+    <div id="email-verification">
+      <div id="ver-emailcon">
+        <FaEnvelope id="ver-icon" />
+        <h1 id="ver-title">Verify Your Email</h1>
+        <p id="ver-message">
+          A verification email has been sent to your email address. Please check your inbox and click the verification link to activate your account.
+        </p>
+        {message && <p className="ver-error-message">{message}</p>}
+        <button id="ver-resend-button" onClick={handleResendEmail} disabled={resendEmail}>
+          Resend Verification Email
+        </button>
+        <button id="ver-login-button" onClick={() => navigate('/login')}>
+          Go to Login Page
+        </button>
+      </div>
+    </div>
   );
 };
 

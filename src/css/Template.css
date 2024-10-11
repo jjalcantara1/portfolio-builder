@@ -25,12 +25,12 @@
 }
 
 #logo {
-    height: 10rem;
-    width: 18rem;
+    height: 95px;
+    width: auto;
     opacity: 0;
     position: absolute;
     animation: slideport 1.15s ease forwards;
-  }
+}
 
   @keyframes fadeIn {
     to {
