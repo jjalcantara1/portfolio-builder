@@ -112,7 +112,13 @@ const Register = () => {
   return (
     <body id="register">
       <div>
-        <img src={logo} alt="Logo" id="logo" />
+        {/* Wrap the logo in a button */}
+        <button
+          onClick={() => navigate('/')} 
+          style={{ background: 'none', border: 'none', padding: '0', cursor: 'pointer' }}
+        >
+          <img src={logo} alt="Logo" id="logo" />
+        </button>
       </div>
       <div id="registercon">
         <h1 id="title">Register</h1>

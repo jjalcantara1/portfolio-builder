@@ -51,7 +51,10 @@ const Login = () => {
   return (
     <body id="login">
       <div>
-        <img src={logo} alt="Logo" id="logo" />
+        {/* Add onClick handler to navigate to landing page */}
+        <button onClick={() => navigate('/')} style={{ border: 'none', backgroundColor: 'transparent', padding: 0, cursor: 'pointer' }}>
+          <img src={logo} alt="Logo" id="logo" />
+        </button>
       </div>
       <div id="logincon">
         <h1 id="title">Login</h1>

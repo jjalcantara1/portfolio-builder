@@ -7,6 +7,56 @@ import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc
 import { onAuthStateChanged } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import Draggable from "react-draggable";
+import { Resizable } from "react-resizable";
+import "react-resizable/css/styles.css"; // Import styles for resizable element
+
+
+
+const ImageUpload = ({ onImageUpload }) => {  // Remove uploadedImageUrl from props
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files && files[0]) {
+      onImageUpload(files[0]);  // Use the passed onImageUpload function
+    }
+  };
+
+  const handleClick = () => {
+    document.getElementById("image-input").click();
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      onImageUpload(e.target.files[0]);  // Use the passed onImageUpload function
+    }
+  };
+
+  return (
+    <div
+      className="image-upload"
+      onDrop={handleDrop}
+      onDragOver={(e) => e.preventDefault()}
+      onClick={handleClick}
+      style={{
+        border: "2px dashed #cccccc",
+        padding: "20px",
+        textAlign: "center",
+        cursor: "pointer",
+      }}
+    >
+      <input
+        type="file"
+        id="image-input"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+      <p>Drag & drop an image here, or click to upload</p>
+    </div>
+  );
+};
 
 const Portfolio = () => {
   const [profile, setProfile] = useState({
@@ -17,6 +67,7 @@ const Portfolio = () => {
     profilePictureUrl: "",
   });
 
+  const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [activeSection, setActiveSection] = useState("");
   const [hoverSection, setHoverSection] = useState("");
   const [draggedElement, setDraggedElement] = useState(null);
@@ -26,7 +77,8 @@ const Portfolio = () => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dropAreaColor, setDropAreaColor] = useState("#ffffff");
   const [selectedElementId, setSelectedElementId] = useState(null);
-  const [isTextFocused, setIsTextFocused] = useState(false); 
+  const [isTextFocused, setIsTextFocused] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("textboxes");
 
   const db = getFirestore();
 
@@ -53,6 +105,32 @@ const Portfolio = () => {
 
 
 
+
+  const handleImageUpload = async (file) => {
+    if (file) {
+      const storage = getStorage();
+      const storageRef = ref(storage, `images/${file.name}`);
+      
+      // Upload the file to Firebase Storage
+      await uploadBytes(storageRef, file);
+      
+      // Get the download URL
+      const url = await getDownloadURL(storageRef);
+      
+      setUploadedImageUrl(url); // Save the permanent URL
+    }
+  };
+
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };
+
+
+ 
+
+
+ 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -112,10 +190,10 @@ const Portfolio = () => {
     const dropArea = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - dropArea.left;
     const y = e.clientY - dropArea.top;
-  
+
     if (draggedElement) {
       let newElement;
-  
+
       // Assign specific size and style based on shape type
       if (draggedElement === "square-textbox") {
         newElement = {
@@ -154,12 +232,23 @@ const Portfolio = () => {
           borderRadius: "15%", // Slight rounding for rounded rectangle
         };
       }
-  
       setDroppedElements((prevElements) => [...prevElements, newElement]);
       setDraggedElement(null);
     }
+
+    // Handle the uploaded image
+    if (uploadedImageUrl) {
+      const newImageElement = {
+        type: "uploaded-image",
+        id: Date.now(),
+        position: { x, y },
+        size: { width: 100, height: 100 }, // Adjust size as needed
+        url: uploadedImageUrl,
+      };
+      setDroppedElements((prevElements) => [...prevElements, newImageElement]);
+      setUploadedImageUrl(""); // Clear after adding
+    }
   };
-  
 
   const handleTextChange = (id, newText) => {
     setDroppedElements((prevElements) =>
@@ -268,7 +357,21 @@ const Portfolio = () => {
     );
   };
 
+  const savePortfolio = () => {
+    // Convert droppedElements to JSON and store in local storage
+    localStorage.setItem("savedPortfolio", JSON.stringify(droppedElements));
+  };
 
+  useEffect(() => {
+    const savedPortfolio = localStorage.getItem("savedPortfolio");
+    if (savedPortfolio) {
+      setDroppedElements(JSON.parse(savedPortfolio));
+    }
+  }, []);
+
+  
+
+  
 
   // New save function
   const handleSave = async () => {
@@ -281,6 +384,7 @@ const Portfolio = () => {
           ...profile,
           dropAreaColor, // Add dropAreaColor to the saved data
           droppedElements,
+          uploadedImageUrl,
         },
         { merge: true }
       ); // Merge to keep existing data and add new
@@ -460,23 +564,45 @@ const Portfolio = () => {
           {activeSection === "elements" && (
             <div className="elements-section">
               <h3>Elements</h3>
-              <div className="element-row">
-                <div
-                  className="element-block square-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "square-textbox")}
-                ></div>
-                <div
-                  className="element-block circle-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "circle-textbox")}
-                ></div>
-                <div
-                  className="element-block rounded-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
-                ></div>
-              </div>
+              <button onClick={() => handleCategoryClick("textboxes")}>
+                Text Boxes
+              </button>
+              <button onClick={() => handleCategoryClick("images")}>
+                Images
+              </button>
+              {activeCategory === "textboxes" && (
+                <div className="element-row">
+                  <div
+                    className="element-block square-textbox"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, "square-textbox")}
+                  ></div>
+                  <div
+                    className="element-block circle-textbox"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, "circle-textbox")}
+                  ></div>
+                  <div
+                    className="element-block rounded-textbox"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
+                  ></div>
+                </div>
+              )}
+              {activeCategory === "images" && (
+                <>
+              <ImageUpload onImageUpload={handleImageUpload} /> 
+                  {uploadedImageUrl && (
+                    <div className="uploaded-image">
+                      <img
+                        src={uploadedImageUrl}
+                        alt="Uploaded"
+                        style={{ maxWidth: "100%" }}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )}
           
@@ -500,69 +626,121 @@ const Portfolio = () => {
             style={{ backgroundColor: dropAreaColor, transformOrigin: 'top-left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
           >
           <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', overflow: 'hidden',height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}>
-          {droppedElements.map((element) => (
-            <div
-              key={element.id}
-              className={`dropped-element ${element.type}`}
-              style={{
-                left: element.position.x,
-                top: element.position.y,
-                position: "absolute",
-                margin: 0,
-                width: element.size.width,
-                height: element.size.height,
-                border: `1em solid ${element.color}`,
-                backgroundColor: element.color,
-                boxSizing: "border-box",
-                cursor: draggingElement ? "grabbing" : "move", // Set cursor when dragging
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleTextBoxClick(element.id);
-              }}
-              onDragStart={(e) => handleElementDragStart(e, element)}
-              draggable={!selectedElementId || selectedElementId !== element.id} // Disable dragging while editing text
-            >
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                onClick={(e) => e.stopPropagation()} // Prevent parent click event when editing
-              >
-                <textarea
-                  value={element.text}
-                  onChange={(e) => handleTextChange(element.id, e.target.value)}
-                  onFocus={() => setIsTextFocused(true)}
-                  onBlur={() => setIsTextFocused(false)}
+          {droppedElements.map((element) => {
+            if (element.type === "uploaded-image") {
+              return (
+                <div
+                  key={element.id}
                   style={{
-                    width: "100%", // Match the width of the shape
-                    height: "100%", // Match the height of the shape
-                    border: "none",
-                    outline: "none",
-                    resize: "none", // Disable manual resizing
-                    boxSizing: "border-box",
-                    fontSize: "16px",
-                    color: element.fontColor, // Use individual font color
-                    fontFamily: element.textFont, // Use individual font family
-                    backgroundColor: "transparent", // Transparent background to match shape
-                    overflow: "hidden", // Hide overflow so text wraps inside
-                    cursor: "text", // Text cursor when editing
+                    position: "absolute",
+                    left: element.position.x,
+                    top: element.position.y,
+                    width: element.size.width,
+                    height: element.size.height,
+                    cursor: draggingElement ? "grabbing" : "move", // Set cursor when dragging
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleTextBoxClick(element.id);
                   }}
-                  onMouseDown={(e) => e.stopPropagation()} // Prevent dragging when focusing text
-                />
-              </div>
-              <div
-                className="resize-handle"
-                onMouseDown={(e) => startResizing(e, element)}
-              />
-            </div>
-          ))}
+                  onDragStart={(e) => handleElementDragStart(e, element)}
+                  draggable={
+                    !selectedElementId || selectedElementId !== element.id
+                  } // Disable dragging while resizing
+                >
+                  <img
+                    src={element.url}
+                    alt="Dropped"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  />
+                  <div
+                    className="resize-handle"
+                    onMouseDown={(e) => startResizing(e, element)} // Function to handle resizing
+                    style={{
+                      position: "absolute",
+                      bottom: 0,
+                      right: 0,
+                      width: "10px",
+                      height: "10px",
+                      backgroundColor: "gray",
+                      cursor: "nwse-resize",
+                    }}
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={element.id}
+                  className={`dropped-element ${element.type}`}
+                  style={{
+                    left: element.position.x,
+                    top: element.position.y,
+                    position: "absolute",
+                    margin: 0,
+                    width: element.size.width,
+                    height: element.size.height,
+                    border: `1em solid ${element.color}`,
+                    backgroundColor: element.color,
+                    boxSizing: "border-box",
+                    cursor: draggingElement ? "grabbing" : "move", // Set cursor when dragging
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTextBoxClick(element.id);
+                  }}
+                  onDragStart={(e) => handleElementDragStart(e, element)}
+                  draggable={
+                    !selectedElementId || selectedElementId !== element.id
+                  } // Disable dragging while editing text
+                >
+                  <div
+                    style={{
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onClick={(e) => e.stopPropagation()} // Prevent parent click event when editing
+                  >
+                    <textarea
+                      value={element.text}
+                      onChange={(e) =>
+                        handleTextChange(element.id, e.target.value)
+                      }
+                      onFocus={() => setIsTextFocused(true)}
+                      onBlur={() => setIsTextFocused(false)}
+                      style={{
+                        width: "100%", // Match the width of the shape
+                        height: "100%", // Match the height of the shape
+                        border: "none",
+                        outline: "none",
+                        resize: "none", // Disable manual resizing
+                        boxSizing: "border-box",
+                        fontSize: "16px",
+                        color: element.fontColor, // Use individual font color
+                        fontFamily: element.textFont, // Use individual font family
+                        backgroundColor: "transparent", // Transparent background to match shape
+                        overflow: "hidden", // Hide overflow so text wraps inside
+                        cursor: "text", // Text cursor when editing
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTextBoxClick(element.id);
+                      }}
+                      onMouseDown={(e) => e.stopPropagation()} // Prevent dragging when focusing text
+                    />
+                  </div>
+                  <div
+                    className="resize-handle"
+                    onMouseDown={(e) => startResizing(e, element)}
+                  />
+                </div>
+              );
+            }
+          })}
         </div>
         </div>
 
