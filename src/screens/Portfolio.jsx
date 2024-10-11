@@ -610,7 +610,7 @@ const Portfolio = () => {
         <div className="canvas">
         <div className="control-panel">
         <div>
-          <span style={{ fontSize: '16px' }}>Height: {height}px</span>
+          <span style={{ fontSize: '16px' }}>Height:</span>
           <button onClick={increaseHeight}>+</button>
           <button onClick={decreaseHeight}>-</button>
         </div>
@@ -625,7 +625,7 @@ const Portfolio = () => {
             onDragOver={handleDragOver} 
             style={{ backgroundColor: dropAreaColor, transformOrigin: 'top-left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
           >
-          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', overflow: 'hidden',height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}>
+          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}>
           {droppedElements.map((element) => {
             if (element.type === "uploaded-image") {
               return (

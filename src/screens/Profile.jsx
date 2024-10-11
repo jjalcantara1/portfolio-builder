@@ -3,7 +3,7 @@ import { Nav, Form, Button } from 'react-bootstrap';
 import '../css/Portfolio.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPalette, faShapes } from '@fortawesome/free-solid-svg-icons';
-import Navbar from './Navbar'; // Import Navbar here
+import Navbar from '../components/Navbar';
 import { auth } from '../firebase'; // Ensure Firebase auth is imported
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
