@@ -14,6 +14,7 @@ import TemplateScreen from './screens/TemplateScreen';
 import ProtectedRoute from './components/ProtectedRoutes';  // Import ProtectedRoute
 import AccountPage from './screens/AccountPage';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Profile from './screens/Profile';
 
 function App() {
 
@@ -41,6 +42,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditPortfolio />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             } 
           />
