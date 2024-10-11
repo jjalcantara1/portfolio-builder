@@ -53,8 +53,8 @@ const Navbar = () => {
           <img src={logo} alt="Logo" id="logo" />
         </div>
         <div className="button-container">
-          <button className="navbar-button">Templates</button>
-          <button className="navbar-button">Portfolio</button>
+          <button className="navbar-button" onClick={() => navigate('/template')}>Templates</button>
+          <button className="navbar-button" onClick={() => navigate('/portfolio')}>Portfolio</button>
         </div>
       </div>
       <div className="nav-profile" onClick={toggleModal}>

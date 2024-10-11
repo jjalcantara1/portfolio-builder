@@ -3,7 +3,7 @@ import { Nav } from "react-bootstrap";
 import "../css/Portfolio.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc
 import { onAuthStateChanged } from "firebase/auth";
@@ -29,6 +29,35 @@ const Portfolio = () => {
   const [isTextFocused, setIsTextFocused] = useState(false); 
 
   const db = getFirestore();
+
+  const [isMainContentVisible, setMainContentVisible] = useState(true);
+
+  const toggleMainContent = () => {
+    setMainContentVisible(!isMainContentVisible);
+  };
+
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [dropAreaContent, setDropAreaContent] = useState([]);
+
+  const handleZoomIn = () => {
+    setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 2)); // Max zoom-in level is 2
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 1)); // Min zoom-out level is 1
+  };
+
+  const [dropAreaHeight, setDropAreaHeight] = useState(400); // Default height
+
+  const [zoom, setZoom] = useState(1);
+  const [height, setHeight] = useState(300); // Default height
+
+  const increaseHeight = () => setHeight(height + 20);
+  const decreaseHeight = () => setHeight(height - 20);
+
+  const handleHeightChange = (event) => {
+    setDropAreaHeight(event.target.value);
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -297,6 +326,24 @@ const Portfolio = () => {
             <span className="nav-text">Elements</span>
           </Nav.Link>
         </Nav>
+        <input
+        type="range"
+        min="200"
+        max="800"
+        value={dropAreaHeight}
+        onChange={handleHeightChange}
+        style={{ width: "100%" }} // Full width for the slider
+      />
+        <button onClick={toggleMainContent}>
+        {isMainContentVisible ? "Hide Main Content" : "Show Main Content"}
+      </button>
+      <button onClick={handleSave} className="save-button">
+            Save Portfolio
+          </button>
+          <div className="controls">
+          <button onClick={handleZoomIn}>Zoom In</button>
+          <button onClick={handleZoomOut}>Zoom Out</button>
+        </div>
         <div className="sidebar-footer">
           <div className="footer-icon">
             {profile.profilePictureUrl ? (
@@ -313,7 +360,9 @@ const Portfolio = () => {
       </div>
 
       <div className="main-content">
-        <div className="left-content">
+
+      <div className="left-content" style={{ display: isMainContentVisible ? "block" : "none" }}>
+
           {activeSection === "theme" && (
             <div className="theme-content-container">
               <h3>{selectedElementId ? "Theme" : "Theme"}</h3>
@@ -446,19 +495,15 @@ const Portfolio = () => {
               </div>
             </div>
           )}
-          <button onClick={handleSave} className="save-button">
-            Save Portfolio
-          </button>
+          
         </div>
 
         {/* Right-side Drop Area */}
-        <div
-          className="drop-area"
-          style={{ backgroundColor: dropAreaColor }}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onClick={clearSelectedElement} // Add this line to clear selection
-        >
+        <div className={`drop-area ${!isMainContentVisible ? 'full-screen' : ''}`}
+            onDrop={handleDrop} 
+            onDragOver={handleDragOver} 
+            style={{ backgroundColor: dropAreaColor,transform: `scale(${zoomLevel})`, transformOrigin: 'center', height: `${dropAreaHeight}px`}}
+          >
           {droppedElements.map((element) => (
             <div
               key={element.id}

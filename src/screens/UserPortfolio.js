@@ -1,64 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { db } from '../firebase'; // Import your Firebase config
-import { doc, onSnapshot } from 'firebase/firestore';
-import { useAuth } from '../components/AuthContext';
-import { Container } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+import "../css/UserPortfolio.css";
 
 const UserPortfolio = () => {
-  const { user } = useAuth();
-  const [elements, setElements] = useState([]);
+  const { username } = useParams();
+  const [droppedElements, setDroppedElements] = useState([]);
+  const [dropAreaColor, setDropAreaColor] = useState("#ffffff");
+
+  const db = getFirestore();
 
   useEffect(() => {
-    if (user) {
-      const docRef = doc(db, 'portfolios', user.uid);
-      const unsubscribe = onSnapshot(docRef, (doc) => {
-        if (doc.exists()) {
-          setElements(doc.data().elements || []);
-        }
-      });
+    const fetchData = async () => {
+      try {
+        const usersCollection = collection(db, "users");
+        const q = query(usersCollection, where("username", "==", username));
+        const querySnapshot = await getDocs(q);
 
-      return () => unsubscribe();
-    }
-  }, [user]);
+        if (!querySnapshot.empty) {
+          const userData = querySnapshot.docs[0].data();
+          setDroppedElements(userData.droppedElements || []);
+          setDropAreaColor(userData.dropAreaColor || "#ffffff");
+        } else {
+          console.error("No such user portfolio exists!");
+        }
+      } catch (error) {
+        console.error("Error fetching user portfolio:", error);
+      }
+    };
+
+    fetchData();
+  }, [username]);
 
   return (
-    <Container className="mt-4">
-      <h1>Your Portfolio</h1>
+    <div className="user-portfolio-container">
       <div
-        style={{
-          border: '1px solid #ccc',
-          height: '600px',
-          position: 'relative',
-          marginTop: '20px',
-        }}
+        className="full-screen-drop-area"
+        style={{ backgroundColor: dropAreaColor }}
+        onContextMenu={(e) => e.preventDefault()} // Disable context menu (right-click) for extra protection
       >
-        {elements.map((element) => (
+        {droppedElements.map((element) => (
           <div
             key={element.id}
+            className="portfolio-element"
             style={{
-              position: 'absolute',
-              left: element.x,
-              top: element.y,
-              width: element.type === 'text' ? 200 : 150,
-              height: element.type === 'text' ? 50 : 150,
-              border: '1px solid #000',
-              backgroundColor: '#fff',
-              padding: '10px',
-              textAlign: 'center',
+              position: "absolute",
+              top: element.position.y,
+              left: element.position.x,
+              width: element.size.width,
+              height: element.size.height,
+              backgroundColor: element.color,
+              borderRadius: element.borderRadius,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: element.fontColor,
+              fontFamily: element.textFont,
+              cursor: "default", // Disable pointer to indicate non-editable state
             }}
           >
-            {element.type === 'text' && <input type="text" value={element.content} readOnly />}
-            {element.type === 'image' && (
-              <img
-                src={element.content}
-                alt="Element"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            )}
+            {element.text}
           </div>
         ))}
       </div>
-    </Container>
+    </div>
   );
 };
 
