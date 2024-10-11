@@ -294,6 +294,9 @@ html, body {
   overflow-y: auto; /* Full screen when the sidebar is hidden */
 }
 
+.zoomed-content {
+  transition: transform 0.2s ease-in-out; /* Smooth zoom transition */
+}
 
 .dropped-element input {
   width: 100%; /* Full width of the container */
@@ -506,8 +509,26 @@ html, body {
   align-items: center; /* Center align controls and drop area */
 }
 
+.canvas {
+  position: relative;
+  flex-grow: 1;
+}
+
 .control-panel {
-  margin-bottom: 10px; /* Spacing between control panel and drop area */
   display: flex;
-  gap: 10px; /* Space between buttons */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.control-panel button {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 20px; /* Larger font for visibility */
+}
+
+.control-panel span {
+  margin-left: 10px;
+  font-size: 16px; /* Font size for height display */
+  color: #da9733;
 }

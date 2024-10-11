@@ -36,28 +36,22 @@ const Portfolio = () => {
     setMainContentVisible(!isMainContentVisible);
   };
 
-  const [zoomLevel, setZoomLevel] = useState(1);
+  
   const [dropAreaContent, setDropAreaContent] = useState([]);
 
-  const handleZoomIn = () => {
-    setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 2)); // Max zoom-in level is 2
-  };
-
-  const handleZoomOut = () => {
-    setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 1)); // Min zoom-out level is 1
-  };
-
+ 
   const [dropAreaHeight, setDropAreaHeight] = useState(400); // Default height
 
-  const [zoom, setZoom] = useState(1);
-  const [height, setHeight] = useState(300); // Default height
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [height, setHeight] = useState(300); // Initial height
 
-  const increaseHeight = () => setHeight(height + 20);
-  const decreaseHeight = () => setHeight(height - 20);
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.1, 2)); // Max zoom level
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.1, 0.5)); // Min zoom level
+  const handleHeightChange = (e) => setHeight(e.target.value);
+  const increaseHeight = () => setHeight(prev => Math.min(prev + 50, 6000)); // Max height
+  const decreaseHeight = () => setHeight(prev => Math.max(prev - 50, 100)); // Min height
 
-  const handleHeightChange = (event) => {
-    setDropAreaHeight(event.target.value);
-  };
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -326,24 +320,14 @@ const Portfolio = () => {
             <span className="nav-text">Elements</span>
           </Nav.Link>
         </Nav>
-        <input
-        type="range"
-        min="200"
-        max="800"
-        value={dropAreaHeight}
-        onChange={handleHeightChange}
-        style={{ width: "100%" }} // Full width for the slider
-      />
+
         <button onClick={toggleMainContent}>
         {isMainContentVisible ? "Hide Main Content" : "Show Main Content"}
       </button>
       <button onClick={handleSave} className="save-button">
             Save Portfolio
           </button>
-          <div className="controls">
-          <button onClick={handleZoomIn}>Zoom In</button>
-          <button onClick={handleZoomOut}>Zoom Out</button>
-        </div>
+
         <div className="sidebar-footer">
           <div className="footer-icon">
             {profile.profilePictureUrl ? (
@@ -497,12 +481,23 @@ const Portfolio = () => {
           )}
           
         </div>
-
+        <div className="canvas">
+        <div className="control-panel">
+        <div>
+          <span style={{ fontSize: '16px' }}>Height: {height}px</span>
+          <button onClick={increaseHeight}>+</button>
+          <button onClick={decreaseHeight}>-</button>
+        </div>
+        <div>
+          <button onClick={handleZoomIn}>Zoom In</button>
+          <button onClick={handleZoomOut}>Zoom Out</button>
+        </div>
+      </div>
         {/* Right-side Drop Area */}
         <div className={`drop-area ${!isMainContentVisible ? 'full-screen' : ''}`}
             onDrop={handleDrop} 
             onDragOver={handleDragOver} 
-            style={{ backgroundColor: dropAreaColor,transform: `scale(${zoomLevel})`, transformOrigin: 'center', height: `${dropAreaHeight}px`}}
+            style={{ backgroundColor: dropAreaColor,transform: `scale(${zoomLevel})`, transformOrigin: 'center', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
           >
           {droppedElements.map((element) => (
             <div
@@ -567,6 +562,7 @@ const Portfolio = () => {
               />
             </div>
           ))}
+        </div>
         </div>
       </div>
     </div>
