@@ -95,10 +95,10 @@ const Portfolio = () => {
   const [dropAreaHeight, setDropAreaHeight] = useState(400); // Default height
 
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [height, setHeight] = useState(300); // Initial height
+  const [height, setHeight] = useState(600); // Initial height
 
   const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.1, 2)); // Max zoom level
-  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.1, 0.5)); // Min zoom level
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.1, 0.8)); // Min zoom level
   const handleHeightChange = (e) => setHeight(e.target.value);
   const increaseHeight = () => setHeight(prev => Math.min(prev + 50, 6000)); // Max height
   const decreaseHeight = () => setHeight(prev => Math.max(prev - 50, 100)); // Min height
@@ -625,7 +625,7 @@ const Portfolio = () => {
             onDragOver={handleDragOver} 
             style={{ backgroundColor: dropAreaColor, transformOrigin: 'top-left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
           >
-          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}>
+          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', height: `${height}px`, position: 'relative' }}>
           {droppedElements.map((element) => {
             if (element.type === "uploaded-image") {
               return (
