@@ -1,64 +1,87 @@
-import React, { useEffect, useState } from 'react';
-import { db } from '../firebase'; // Import your Firebase config
-import { doc, onSnapshot } from 'firebase/firestore';
-import { useAuth } from '../components/AuthContext';
-import { Container } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getFirestore, collection, query, where, onSnapshot } from "firebase/firestore"; // Use onSnapshot for real-time updates
+import "../css/UserPortfolio.css";
 
 const UserPortfolio = () => {
-  const { user } = useAuth();
-  const [elements, setElements] = useState([]);
+  const { username } = useParams();
+  const [droppedElements, setDroppedElements] = useState([]);
+  const [dropAreaColor, setDropAreaColor] = useState("#ffffff");
+
+  const db = getFirestore();
 
   useEffect(() => {
-    if (user) {
-      const docRef = doc(db, 'portfolios', user.uid);
-      const unsubscribe = onSnapshot(docRef, (doc) => {
-        if (doc.exists()) {
-          setElements(doc.data().elements || []);
-        }
-      });
+    const usersCollection = collection(db, "users");
+    const q = query(usersCollection, where("username", "==", username));
+    
+    // Use onSnapshot to listen for real-time updates
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      if (!querySnapshot.empty) {
+        const userData = querySnapshot.docs[0].data();
+        setDroppedElements(userData.droppedElements || []);
+        setDropAreaColor(userData.dropAreaColor || "#ffffff");
+      } else {
+        console.error("No such user portfolio exists!");
+      }
+    });
 
-      return () => unsubscribe();
-    }
-  }, [user]);
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
+  }, [username, db]);
 
   return (
-    <Container className="mt-4">
-      <h1>Your Portfolio</h1>
+    <div className="user-portfolio-container">
       <div
-        style={{
-          border: '1px solid #ccc',
-          height: '600px',
-          position: 'relative',
-          marginTop: '20px',
-        }}
+        className="full-screen-drop-area"
+        style={{ backgroundColor: dropAreaColor }}
+        onContextMenu={(e) => e.preventDefault()} // Disable context menu (right-click) for extra protection
       >
-        {elements.map((element) => (
-          <div
-            key={element.id}
-            style={{
-              position: 'absolute',
-              left: element.x,
-              top: element.y,
-              width: element.type === 'text' ? 200 : 150,
-              height: element.type === 'text' ? 50 : 150,
-              border: '1px solid #000',
-              backgroundColor: '#fff',
-              padding: '10px',
-              textAlign: 'center',
-            }}
-          >
-            {element.type === 'text' && <input type="text" value={element.content} readOnly />}
-            {element.type === 'image' && (
+        {droppedElements.map((element) => {
+          if (element.type === "uploaded-image") {
+            return (
               <img
-                src={element.content}
-                alt="Element"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                key={element.id}
+                src={element.url} // Use the URL from the uploaded image
+                alt=""
+                style={{
+                  position: "absolute",
+                  top: element.position.y,
+                  left: element.position.x,
+                  width: element.size.width,
+                  height: element.size.height,
+                  borderRadius: element.borderRadius,
+                  cursor: "default", // Disable pointer to indicate non-editable state
+                }}
               />
-            )}
-          </div>
-        ))}
+            );
+          }
+
+          return (
+            <div
+              key={element.id}
+              className="portfolio-element"
+              style={{
+                position: "absolute",
+                top: element.position.y,
+                left: element.position.x,
+                width: element.size.width,
+                height: element.size.height,
+                backgroundColor: element.color,
+                borderRadius: element.borderRadius,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: element.fontColor,
+                fontFamily: element.textFont,
+                cursor: "default", // Disable pointer to indicate non-editable state
+              }}
+            >
+              {element.text}
+            </div>
+          );
+        })}
       </div>
-    </Container>
+    </div>
   );
 };
 

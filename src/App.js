@@ -86,17 +86,7 @@ function App() {
           } 
         />
           {/* User Portfolio Route with Username Validation */}
-          <Route 
-            path="/:username" 
-            element={({ match }) => {
-              const username = match.params.username;
-              return isValidUsername(username) ? (
-                <UserPortfolio />
-              ) : (
-                <Navigate to="/" />
-              );
-            }} 
-          />
+          <Route path="/:username" element={<UserPortfolio/>}  />
           
           {/* Catch-all for invalid routes */}
           <Route path="*" element={<Navigate to="/" />} />

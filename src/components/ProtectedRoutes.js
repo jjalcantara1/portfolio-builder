@@ -1,12 +1,14 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../components/AuthContext'; // Use useAuth hook instead of directly accessing AuthContext
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth(); // Access the user via the useAuth hook
+  const { user } = useAuth();
+  const location = useLocation();
 
   if (!user) {
-    return <Navigate to="/login" />;
+    // Redirect the user to the login page with a return path to the intended destination
+    return <Navigate to="/login" state={{ from: location }} />;
   }
 
   return children;

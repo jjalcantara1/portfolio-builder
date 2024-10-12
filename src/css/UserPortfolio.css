@@ -1,0 +1,29 @@
+.user-portfolio-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .full-screen-drop-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw; /* Use full width of the viewport */
+    height: 100vh; /* Use full height of the viewport */
+    background-color: #f9f9f9; /* Default background color */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: flex-start; /* Align content to the top */
+    overflow-y: auto; /* Make scrollable if needed */
+  }
+  
+  .portfolio-element {
+    text-align: center;
+    overflow: hidden;
+    padding: 5px;
+    word-wrap: break-word;
+  }
+  

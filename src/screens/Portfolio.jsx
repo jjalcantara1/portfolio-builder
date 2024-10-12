@@ -3,7 +3,7 @@ import { Nav } from "react-bootstrap";
 import "../css/Portfolio.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc
 import { onAuthStateChanged } from "firebase/auth";
@@ -12,7 +12,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css"; // Import styles for resizable element
-
+import Sidebar from "../components/Sidebar";
 
 
 const ImageUpload = ({ onImageUpload }) => {  // Remove uploadedImageUrl from props
@@ -82,6 +82,29 @@ const Portfolio = () => {
 
   const db = getFirestore();
 
+  const [isMainContentVisible, setMainContentVisible] = useState(true);
+
+  const toggleMainContent = () => {
+    setMainContentVisible(!isMainContentVisible);
+  };
+
+  
+  const [dropAreaContent, setDropAreaContent] = useState([]);
+
+ 
+  const [dropAreaHeight, setDropAreaHeight] = useState(400); // Default height
+
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [height, setHeight] = useState(600); // Initial height
+
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.1, 2)); // Max zoom level
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.1, 0.8)); // Min zoom level
+  const handleHeightChange = (e) => setHeight(e.target.value);
+  const increaseHeight = () => setHeight(prev => Math.min(prev + 50, 6000)); // Max height
+  const decreaseHeight = () => setHeight(prev => Math.max(prev - 50, 100)); // Min height
+
+
+
 
   const handleImageUpload = async (file) => {
     if (file) {
@@ -103,6 +126,11 @@ const Portfolio = () => {
     setActiveCategory(category);
   };
 
+
+ 
+
+
+ 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -147,10 +175,6 @@ const Portfolio = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedElementId, isTextFocused]);
-
-  const handleSectionClick = (section) => {
-    setActiveSection(section);
-  };
 
   const handleDragStart = (e, element) => {
     setDraggedElement(element);
@@ -365,54 +389,30 @@ const Portfolio = () => {
       alert("You need to be logged in to save your portfolio.");
     }
   };
+  const handleSectionClick = (section) => {
+    setActiveSection(section);
+    setSelectedElementId(null); // Reset selected element when changing sections
+    setMainContentVisible(true); // Automatically open main content area
+  };
 
   return (
     <div className="portfolio-container">
       <Navbar />
-      <div className="sidebar-oblong">
-        <Nav className="flex-column sidebar-nav">
-          <Nav.Link
-            href="#theme"
-            className={`sidebar-link ${
-              activeSection === "theme" ? "active" : ""
-            } ${hoverSection === "theme" ? "hover" : ""}`}
-            onClick={() => handleSectionClick("theme")}
-            onMouseEnter={() => setHoverSection("theme")}
-            onMouseLeave={() => setHoverSection("")}
-          >
-            <FontAwesomeIcon icon={faPalette} className="nav-icon" />
-            <span className="nav-text">Theme</span>
-          </Nav.Link>
-          <Nav.Link
-            href="#elements"
-            className={`sidebar-link ${
-              activeSection === "elements" ? "active" : ""
-            } ${hoverSection === "elements" ? "hover" : ""}`}
-            onClick={() => handleSectionClick("elements")}
-            onMouseEnter={() => setHoverSection("elements")}
-            onMouseLeave={() => setHoverSection("")}
-          >
-            <FontAwesomeIcon icon={faShapes} className="nav-icon" />
-            <span className="nav-text">Elements</span>
-          </Nav.Link>
-        </Nav>
-        <div className="sidebar-footer">
-          <div className="footer-icon">
-            {profile.profilePictureUrl ? (
-              <img
-                src={profile.profilePictureUrl}
-                alt="Profile"
-                className="footer-profile-image"
-              />
-            ) : (
-              <div className="footer-image-placeholder">No Image</div>
-            )}
-          </div>
-        </div>
-      </div>
+      <Sidebar
+      activeSection={activeSection}
+      hoverSection={hoverSection}
+      handleSectionClick={handleSectionClick}
+      setHoverSection={setHoverSection}
+      toggleMainContent={toggleMainContent}
+      isMainContentVisible={isMainContentVisible}
+      handleSave={handleSave}
+      profile={profile}
+    />
 
       <div className="main-content">
-        <div className="left-content">
+
+      <div className="left-content" style={{ display: isMainContentVisible ? "block" : "none" }}>
+
           {activeSection === "theme" && (
             <div className="theme-content-container">
               <h3>{selectedElementId ? "Theme" : "Theme"}</h3>
@@ -526,13 +526,6 @@ const Portfolio = () => {
           {activeSection === "elements" && (
             <div className="elements-section">
               <h3>Elements</h3>
-              <button onClick={() => handleCategoryClick("textboxes")}>
-                Text Boxes
-              </button>
-              <button onClick={() => handleCategoryClick("images")}>
-                Images
-              </button>
-              {activeCategory === "textboxes" && (
                 <div className="element-row">
                   <div
                     className="element-block square-textbox"
@@ -549,10 +542,15 @@ const Portfolio = () => {
                     draggable
                     onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
                   ></div>
+
+                  {/* <div
+                    className="element-block "
+                  ></div> */}
+
+
                 </div>
-              )}
-              {activeCategory === "images" && (
                 <>
+                <h3>Image Upload</h3>
               <ImageUpload onImageUpload={handleImageUpload} /> 
                   {uploadedImageUrl && (
                     <div className="uploaded-image">
@@ -564,22 +562,29 @@ const Portfolio = () => {
                     </div>
                   )}
                 </>
-              )}
             </div>
           )}
-          <button onClick={handleSave} className="save-button">
-            Save Portfolio
-          </button>
+          
         </div>
-
+        <div className="canvas">
+        <div className="control-panel">
+        <div>
+          <span style={{ fontSize: '16px' }}>Height:</span>
+          <button onClick={increaseHeight}>+</button>
+          <button onClick={decreaseHeight}>-</button>
+        </div>
+        <div>
+          <button onClick={handleZoomIn}>Zoom In</button>
+          <button onClick={handleZoomOut}>Zoom Out</button>
+        </div>
+      </div>
         {/* Right-side Drop Area */}
-        <div
-          className="drop-area"
-          style={{ backgroundColor: dropAreaColor }}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onClick={clearSelectedElement} // Add this line to clear selection
-        >
+        <div className={`drop-area ${!isMainContentVisible ? 'full-screen' : ''}`}
+            onDrop={handleDrop} 
+            onDragOver={handleDragOver} 
+            style={{ backgroundColor: dropAreaColor, transformOrigin: 'top-left', height: `${height}px`,  overflowY: 'scroll', position: 'relative' }}
+          >
+          <div className="zoomable-area" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left', height: `${height}px`, position: 'relative' }}>
           {droppedElements.map((element) => {
             if (element.type === "uploaded-image") {
               return (
@@ -695,6 +700,9 @@ const Portfolio = () => {
               );
             }
           })}
+        </div>
+        </div>
+
         </div>
       </div>
     </div>

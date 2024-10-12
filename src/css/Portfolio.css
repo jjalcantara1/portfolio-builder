@@ -258,23 +258,7 @@ html, body {
   display: flex;
 }
 
-/* .sidebar-oblong {
-  width: 20%;
-  background-color: #3f466b;
-  padding: 15px;
-}
 
-.main-content {
-  display: flex;
-  flex-direction: row;
-  width: 80%;
-}
-
-.left-content {
-  width: 40%;
-  background-color: #3f466b;
-  padding: 20px;
-} */
 
 .element-row {
   display: flex;
@@ -294,12 +278,24 @@ html, body {
 }
 
 .drop-area {
-  width: 100%;
-  height: 100%;
-  border: 2px dashed #ccc;
   position: relative;
-  overflow: hidden; /* Prevent elements from overflowing */
-  background-color: #f9f9f9; /* Light background for visibility */
+  width: 800px; /* Set your preferred width */
+  max-width: 100%;
+  margin: 0 auto; /* Center horizontally */
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  flex-grow: 1; /* This allows the drop area to grow */
+  border: 1px solid #ccc;
+}
+
+.drop-area.full-screen {
+  width: 100%;
+  flex-grow: 1;
+  overflow-y: auto; /* Full screen when the sidebar is hidden */
+}
+
+.zoomed-content {
+  transition: transform 0.2s ease-in-out; /* Smooth zoom transition */
 }
 
 .dropped-element input {
@@ -320,36 +316,6 @@ html, body {
 }
 
 
-/* .dropped-element {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #f6b17a;
-  color: #131722;
-  font-weight: bold;
-  cursor: grab;
-  margin: 10px 0;
-  width: 100px;
-  height: 100px; 
-} */
-
-/* .dropped-element.square-textbox {
-  width: 150px;
-  height: 150px;
-}
-
-.dropped-element.circle-textbox {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-}
-
-.dropped-element.rounded-textbox {
-  width: 200px;
-  height: 100px;
-  border-radius: 15px;
-} */
 
 .resize-handle {
   width: 12px;
@@ -468,39 +434,13 @@ html, body {
   background: #007bff; /* Change color on hover */
 }
 
-/* .element-block {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  background-color: #f6b17a;
-  color: #131722;
-  font-weight: bold;
-  cursor: grab;
-  margin: 10px 0;
-  width: 100px;
-  height: 100px; 
-} */
 
 .textbox-block {
   border: 2px solid #fff;
   text-align: center;
 }
 
-/* .square-textbox {
-  border-radius: 0;
-  background-color: #1dd1a1; 
-}
 
-.circle-textbox {
-  border-radius: 50%;
-  background-color: #1dd1a1; 
-}
-
-.rounded-textbox {
-  border-radius: 15px;
-  background-color: #1dd1a1;
-} */
 
 /* Hover effect for element blocks */
 .element-block:hover {
@@ -546,6 +486,8 @@ html, body {
   border-radius: 15px;
 }
 
+
+
 /* Styling for the dropped elements in the drop area */
 .dropped-element {
   border: 2px solid #f6b17a; /* Solid border for dropped elements */
@@ -564,3 +506,35 @@ html, body {
 }
 
 
+
+
+
+.port-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align controls and drop area */
+}
+
+.canvas {
+  position: relative;
+  flex-grow: 1;
+}
+
+.control-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.control-panel button {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 20px; /* Larger font for visibility */
+}
+
+.control-panel span {
+  margin-left: 10px;
+  font-size: 16px; /* Font size for height display */
+  color: #da9733;
+}
