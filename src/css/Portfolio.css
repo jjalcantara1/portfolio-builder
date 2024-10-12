@@ -486,6 +486,8 @@ html, body {
   border-radius: 15px;
 }
 
+
+
 /* Styling for the dropped elements in the drop area */
 .dropped-element {
   border: 2px solid #f6b17a; /* Solid border for dropped elements */

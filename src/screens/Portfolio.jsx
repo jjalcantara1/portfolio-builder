@@ -564,13 +564,6 @@ const Portfolio = () => {
           {activeSection === "elements" && (
             <div className="elements-section">
               <h3>Elements</h3>
-              <button onClick={() => handleCategoryClick("textboxes")}>
-                Text Boxes
-              </button>
-              <button onClick={() => handleCategoryClick("images")}>
-                Images
-              </button>
-              {activeCategory === "textboxes" && (
                 <div className="element-row">
                   <div
                     className="element-block square-textbox"
@@ -587,10 +580,15 @@ const Portfolio = () => {
                     draggable
                     onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
                   ></div>
+
+                  {/* <div
+                    className="element-block "
+                  ></div> */}
+
+
                 </div>
-              )}
-              {activeCategory === "images" && (
                 <>
+                <h3>Image Upload</h3>
               <ImageUpload onImageUpload={handleImageUpload} /> 
                   {uploadedImageUrl && (
                     <div className="uploaded-image">
@@ -602,7 +600,6 @@ const Portfolio = () => {
                     </div>
                   )}
                 </>
-              )}
             </div>
           )}
           
