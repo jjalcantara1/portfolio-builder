@@ -1,41 +1,90 @@
-.template-card {
-  height: 25rem;
-  width: 20rem;
-  background-color: #414668;
+/* styles/Template.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800&display=swap');
+
+#templatebody {
+  background-color: #141426;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+#createtemp {
   text-align: center;
-  border-radius: 3rem;
-  transition: transform 0.3s;
-  color: #e2e1e1;
-  cursor: pointer;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  animation: slidedown 1.15s ease forwards;
+  color: #e2e1e1; /* Improved text color */
 }
 
-.template-card:hover {
-  transform: scale(1.05);
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
 }
 
-@keyframes slidedown {
-  from {
-      scale: 0.85;
-      transform: translateY(20%);
-  }
-  to {
-      opacity: 1;
-      scale: 1;
-      transform: translateY(0);
-  }
-}
-
-.template-card:hover {
-  transform: scale(1.05);
+#portcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 2rem 0; /* Padding for better spacing */
 }
 
 #cardcon {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* Three columns for templates */
   align-items: center;
-  gap: 3.5rem;
+  gap: 3.5rem; /* Space between cards */
+  margin-top: 100px;
+}
+
+.template-card {
+  height: 25rem; /* Fixed height */
+  width: 20rem; /* Fixed width */
+  background-color: #414668; /* Background color */
+  text-align: center;
+  border-radius: 3rem; /* Rounded corners */
+  transition: transform 0.3s; /* Smooth transition for hover */
+  color: #e2e1e1; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  animation: slidedown 1.15s ease forwards; /* Animation on load */
+}
+
+@keyframes slidedown {
+  from {
+      scale: 0.85; /* Starting scale */
+      transform: translateY(20%); /* Starting position */
+  }
+  to {
+      opacity: 1; /* Final opacity */
+      scale: 1; /* Final scale */
+      transform: translateY(0); /* Final position */
+  }
+}
+
+.template-card:hover {
+  transform: scale(1.05); /* Scale effect on hover */
+}
+
+.editable-area {
+  margin-top: 100px; /* Increased space between navbar and editable area */
+  display: flex;
+  flex-wrap: wrap; /* Allows for multiple elements to wrap */
+  justify-content: center; /* Center the elements */
+  gap: 20px; /* Space between elements */
+}
+
+.element-card {
+  border: 1px solid #000;
+  background-color: #fff; /* White background for elements */
+  padding: 10px; /* Padding for content */
+  text-align: center;
+  border-radius: 8px; /* Rounded corners for elements */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+input[type="text"] {
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 5px; /* Padding for input */
+  width: 90%; /* Full width for input */
 }

@@ -1,16 +1,13 @@
-// screens/EditPortfolio.js
 import React, { useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { db } from '../firebase'; // Import your Firebase config
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../components/AuthContext';
-import { Button, Container } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import templates from '../components/templates'; 
-import '../css/Template.css';
 import '../css/CardButton.css';
-import Header from '../components/Header';
-
+import Navbar from "./Navbar";
 
 const Template = () => {
   const { user } = useAuth();
@@ -70,90 +67,73 @@ const Template = () => {
   };
 
   return (
-    <body id="templatebody">
+    <div id="templatebody">
+      {/* Implement your new Navbar */}
+      <Navbar />
 
-        <Header screen="template" />
-      
-    <div id="portcon">
-    <div id="cardcon">
-  <div className="template-card" onClick={() => navigate('/edit')}>
-    <h2 id="createtemp">Create your Own Template</h2>
-  </div>
-
-  {templates.map((template) => (
-    <div
-      key={template.id}
-      className="template-card"
-      onClick={() => handleLoadTemplate(template.id)}
-    >
-      <h2>{template.name}</h2>
-    </div>
-  ))}
-</div>
-    </div>
-
-
-
-      {/* Editable elements area */}
-      <div
-        // style={{
-        //   border: '1px solid #ccc',
-        //   height: '600px',
-        //   position: 'relative',
-        //   marginTop: '20px',
-        // }}
-      >
-        {elements.map((element) => (
-          <Rnd
-            key={element.id}
-            default={{
-              x: element.x,
-              y: element.y,
-              width: 200,
-              height: element.type === 'text' ? 50 : 150,
-            }}
-            onDragStop={(e, d) => handleDragStop(element.id, d)}
-          >
-            <div
-              style={{
-                border: '1px solid #000',
-                backgroundColor: '#fff',
-                padding: '10px',
-                textAlign: 'center',
-              }}
-            >
-              {element.type === 'text' && (
-                <input
-                  type="text"
-                  value={element.content}
-                  onChange={(e) => {
-                    const updatedElements = elements.map((el) =>
-                      el.id === element.id ? { ...el, content: e.target.value } : el
-                    );
-                    setElements(updatedElements); // Trigger autosave
-                  }}
-                />
-              )}
-              {element.type === 'image' && (
-                <img
-                  src={element.content}
-                  alt="Element"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              )}
-              
-              {/* Delete button for each element */}
-              <Button variant="danger" onClick={() => handleDeleteElement(element.id)}>
-                Delete
-              </Button>
+      <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
+        <div id="portcon">
+          <div id="cardcon">
+            <div className="template-card" onClick={() => navigate('/edit')}>
+              <h2 id="createtemp">Create your Own Template</h2>
             </div>
-          </Rnd>
-        ))}
+
+            {templates.map((template) => (
+              <div
+                key={template.id}
+                className="template-card"
+                onClick={() => handleLoadTemplate(template.id)}
+              >
+                <h2>{template.name}</h2>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Editable elements area */}
+        <div className="editable-area" style={{ marginTop: '80px' }}>
+          {elements.map((element) => (
+            <Rnd
+              key={element.id}
+              default={{
+                x: element.x,
+                y: element.y,
+                width: 200,
+                height: element.type === 'text' ? 50 : 150,
+              }}
+              onDragStop={(e, d) => handleDragStop(element.id, d)}
+            >
+              <div className="element-card">
+                {element.type === 'text' && (
+                  <input
+                    type="text"
+                    value={element.content}
+                    onChange={(e) => {
+                      const updatedElements = elements.map((el) =>
+                        el.id === element.id ? { ...el, content: e.target.value } : el
+                      );
+                      setElements(updatedElements); // Trigger autosave
+                    }}
+                  />
+                )}
+                {element.type === 'image' && (
+                  <img
+                    src={element.content}
+                    alt="Element"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
+                
+                <Button variant="danger" onClick={() => handleDeleteElement(element.id)}>
+                  Delete
+                </Button>
+              </div>
+            </Rnd>
+          ))}
+        </div>
       </div>
-      
-    </body>
+    </div>
   );
 };
 
 export default Template;
-

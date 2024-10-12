@@ -78,14 +78,15 @@
   
 
   #logo {
-    height: 10rem; /* Adjust as needed */
-    width: 18rem; /* Adjust as needed */
+    height: 95px; /* Adjust as needed */
+    width: auto; /* Adjust as needed */
     opacity: 1; /* Set to 1 to make it visible */
     position: absolute; /* Use absolute or fixed based on your layout preference */
     top: 0; /* Aligns to the top */
     left: 0; /* Aligns to the left */
     display: flex; /* Align items within the logo container */
     align-items: start; /* Align items to the start */
+    margin-right: 15px;
   }
   .profile {
     width: 50px; /* Adjust size as needed */
@@ -106,7 +107,147 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    position: relative;
+    transition: background-color 0.3s ease;
+
+    .top-navbar {
+        display: flex;
+        justify-content: space-between; /* Space between center and sign-out */
+        align-items: center; /* Center items vertically */
+        background-color: #131722; /* Background color for the navbar */
+        height: 80px; /* Set the height of the navbar */
+        padding: 0 20px; /* Padding on the sides */
+    }
+
+    .nav-profile:hover {
+      background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+    }
+    
+    
+    /* Center the buttons within a single bordered container */
+    .navbar-center {
+        display: flex;
+        justify-content: center; /* Center the buttons within this flex container */
+        flex-grow: 1; /* Allow this section to grow and take up available space */
+    }
+    
+    /* Unified button container for Templates and Portfolio */
+    .button-container {
+        display: flex; /* Use flexbox to align buttons side by side */
+        border: 2px solid #f6b17a; /* Orange border for consistency */
+        border-radius: 30px; /* Rounded edges for the container */
+        background-color: #2a2f4f; /* Slightly darker background for a professional feel */
+        padding: 5px; /* Padding inside the button container */
+    }
+    
+    /* Style for the buttons */
+    .navbar-button {
+        background-color: #2a2f4f; /* Consistent background color */
+        color: #fff; /* Text color */
+        border-radius: 30px; /* Rounded edges */
+        padding: 12px 25px; /* Unified padding for consistency */
+        font-size: 1.2em; /* Font size */
+        font-weight: 600; /* Bold font for emphasis */
+        cursor: pointer; /* Pointer on hover */
+        transition: all 0.3s ease; /* Smooth transition */
+        margin: 0 5px; /* Margin between buttons */
+        flex-grow: 1; /* Ensure buttons grow equally */
+        text-align: center; /* Center the text inside buttons */
+    }
+    
+    .navbar-button:hover {
+        background-color: #f6b17a; /* Orange hover color for consistency */
+        color: #131722; /* Dark text on hover for better contrast */
+        border: 2px solid #f6b17a; /* Optional border if desired on hover */
+        transform: scale(1.05); /* Slight scale effect */
+    }
+    
+    /* Style for the profile section */
+    .nav-profile {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    /* Username styling */
+    .username {
+      color: orange;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 1.2em;
+      position: relative;
+    }
+    
+    /* Profile picture styling */
+    .profile-pic {
+        width: 40px; /* Adjust size as needed */
+        height: 40px; /* Adjust size as needed */
+        border-radius: 50%; /* Makes the profile picture circular */
+        border: 2px solid orange; /* Orange border */
+    }
+    
+    /* Profile modal dropdown styling */
+    .profile-modal {
+        position: absolute;
+        top: 60px; /* Adjust modal position */
+        right: 10px; /* Align modal to the right */
+        z-index: 1050; /* Ensure modal is on top */
+        backdrop: false; /* Prevent dark background */
+        border: none; /* Remove default border */
+        width: 220px; /* More compact width for a dropdown feel */
+        border-radius: 10px; /* Smooth and modern corners */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    }
+    
+    /* Profile dropdown body */
+    .profile-dropdown-body {
+        padding: 0; /* Remove extra padding */
+        background-color: #2a2f4f; /* Match the navbar */
+        border-radius: 10px; /* Smooth dropdown style */
+    }
+    
+    /* Card styling for the dropdown */
+    .profile-dropdown-card {
+        background-color: transparent; /* Remove card background */
+        border: none; /* Remove border */
+        padding: 10px 0; /* Spacing for the options */
+    }
+    
+    /* List styling for dropdown options */
+    .dropdown-options {
+        list-style: none; /* Remove default list styles */
+        margin: 0; /* Remove margin */
+        padding: 0; /* Remove padding */
+    }
+    
+    /* Style for each dropdown button */
+    .dropdown-button {
+        display: block; /* Full width */
+        width: 100%; /* Full width for dropdown */
+        text-align: left; /* Align text to the left */
+        padding: 10px 15px; /* Padding around the buttons */
+        color: #fff; /* White text for contrast */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded edges for a professional look */
+        transition: background-color 0.2s ease-in-out; /* Smooth transition */
+    }
+    
+    /* Hover effect for dropdown buttons */
+    .dropdown-button:hover {
+        background-color: #f6b17a; /* Change to orange on hover */
+        color: #131722; /* Dark text on hover */
+    }
+    
+    /* Additional logout button styling */
+    .logout-button {
+        color: #ff4d4d; /* Red color for logout */
+    }
+    
+    .logout-button:hover {
+        background-color: #ff7f50; /* Darker orange for hover */
+        color: #fff; /* Keep white text on hover */
+    }
+    
   }
   
   .username {
@@ -122,44 +263,153 @@
     border: 2px solid orange; /* Orange border */
   }
 
-  .profile-modal {
-    width: 250px;
-    border-radius: 8px;
-    position: absolute;
-    top: 60px;  /* Adjust modal position */
-    right: 10px;
-    z-index: 1050;
-    padding: 10px;
+ /* Profile Modal Container */
+.profile-modal {
+  width: 250px;
+  border-radius: 12px;
+  position: absolute;
+  top: 60px; /* Adjust modal position */
+  right: 10px;
+  z-index: 1050;
+  padding: 15px;
+  background-color: #2a2f4f; /* Slightly darker background for contrast */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Softer shadow for depth */
+  transition: opacity 0.4s ease, transform 0.4s ease; /* Smooth transition */
+  opacity: 0;
+  transform: scale(0.95); /* Start slightly smaller */
+}
+/* Style for the arrow next to the profile */
+.arrow {
+  color: white; /* Color of the arrow */
+  font-size: 16px;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+
+.arrow.up {
+  transform: rotate(180deg); /* Rotates the arrow when the modal is open */
+}
+
+.arrow.down {
+  transform: rotate(0deg);
+}
+
+
+/* Show the modal */
+.profile-modal.show {
+  opacity: 1;
+  transform: scale(1); /* Scale up smoothly */
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: #2a2f4f; /* Background color of the card */
+  border: none; /* Remove default border */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* More subtle shadow */
+  color: white; /* Text color */
+  padding: 20px; /* More padding for clean spacing */
+}
+
+/* Modal Options List */
+.modal-options {
+  list-style: none;
+  padding: 0;
+  margin: 0; /* Ensure there is no margin */
+}
+
+.modal-options li {
+  margin-bottom: 15px; /* Spacing between options */
+}
+
+/* Modal Buttons */
+.modal-options button {
+  background-color: #f6b17a; /* Button background color */
+  border: none; /* Remove border */
+  color: #131722; /* Button text color */
+  cursor: pointer;
+  padding: 12px 20px; /* Padding for better button size */
+  text-align: left;
+  width: 100%; /* Full-width buttons */
+  border-radius: 10px; /* Rounded button edges */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+  font-size: 1.1em; /* Larger font for better readability */
+}
+
+.modal-options button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.modal-options button i {
+  font-size: 1.2em; /* Adjust icon size */
+}
+
+/* Hover and Focus Effect for Buttons */
+.modal-options button:hover, 
+.modal-options button:focus {
+  background-color: #ff7f50; /* Change background on hover */
+  transform: translateY(-3px); /* Slight pop-out effect */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* Profile Header (username + avatar) */
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px; /* Spacing between header and content */
+}
+
+.username {
+  color: #f6b17a; /* Brand color for username */
+  font-weight: bold; /* Strong emphasis on username */
+  margin-left: 10px; /* Space between avatar and username */
+  font-size: 1.2em; /* Increase font size */
+}
+
+/* Profile Image Styling */
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid orange;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  .profile-card {
-    background-color: #2a2f4f; /* Background color of the card */
-    border: none; /* Remove default border */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
-    color: white; /* Text color */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .modal-options {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .modal-options li {
-    margin: 10px 0;
-  }
-  
-  .modal-options button {
-    background-color: #f6b17a; /* Button background color */
-    border: none; /* Remove border */
-    color: #131722; /* Button text color */
-    cursor: pointer;
-    padding: 10px;
-    text-align: left;
-    border-radius: 5px; /* Rounded button edges */
-    transition: background-color 0.3s; /* Smooth transition for hover */
-  }
-  
-  .modal-options button:hover {
-    background-color: #ff7f50; /* Change background on hover */
-  }
-  
+}
+
+/* Add this class for the fade-in effect */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.dropdown-arrow {
+  margin-left: 5px;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.nav-profile:hover .dropdown-arrow {
+  transform: rotate(180deg); /* Flip arrow on hover */
+}
+
+.profile-modal {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.profile-modal.show {
+  opacity: 1;
+  transform: translateY(0);
+}

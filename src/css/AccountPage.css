@@ -1,58 +1,77 @@
-.account-settings {
-    width: 50%;
-    margin: 0 auto;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .account-settings p {
-    font-size: 16px;
-    color: #555;
-  }
-  
-  button {
-    margin: 10px 0;
-    padding: 10px 20px;
-    background-color: #ff6200;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #e05a00;
-  }
-  
-  .email-verification {
-    margin: 10px 0;
-    text-align: center;
-  }
-  
-  .email-update,
-  .username-update,
-  .password-update {
-    margin-top: 10px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  input:focus {
-    border-color: #ff6200;
-    outline: none;
-  }
-  
+.acc-container {
+  width: 60%;
+  margin: 0 auto;
+  background-color: #1c1c2e;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: #f0eeeb;
+  font-family: "Poppins", sans-serif;
+}
+
+.acch2 {
+  text-align: center;
+  color: #ffad39;
+  font-size: 2rem;
+}
+
+.acc-info {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.acc-icon {
+  margin-right: 10px;
+  color: #ffad39;
+}
+
+.acc-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 2px solid #32374c;
+  background-color: #51577b;
+  color: #f0eeeb;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.acc-input:focus {
+  border-color: #ffad39;
+  outline: none;
+}
+
+.acc-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #ffad39;
+  color: #1c1c2e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.acc-btn:hover {
+  background-color: #ff6200;
+}
+
+.acc-btn-icon {
+  margin-right: 8px;
+}
+
+.acc-update {
+  margin-top: 20px;
+}
+
+.acc-status-badge {
+  background-color: #ff6200;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
