@@ -12,7 +12,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css"; // Import styles for resizable element
-
+import Sidebar from "../components/Sidebar";
 
 
 const ImageUpload = ({ onImageUpload }) => {  // Remove uploadedImageUrl from props
@@ -175,10 +175,6 @@ const Portfolio = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedElementId, isTextFocused]);
-
-  const handleSectionClick = (section) => {
-    setActiveSection(section);
-  };
 
   const handleDragStart = (e, element) => {
     setDraggedElement(element);
@@ -393,59 +389,25 @@ const Portfolio = () => {
       alert("You need to be logged in to save your portfolio.");
     }
   };
+  const handleSectionClick = (section) => {
+    setActiveSection(section);
+    setSelectedElementId(null); // Reset selected element when changing sections
+    setMainContentVisible(true); // Automatically open main content area
+  };
 
   return (
     <div className="portfolio-container">
       <Navbar />
-      <div className="sidebar-oblong">
-        <Nav className="flex-column sidebar-nav">
-          <Nav.Link
-            href="#theme"
-            className={`sidebar-link ${
-              activeSection === "theme" ? "active" : ""
-            } ${hoverSection === "theme" ? "hover" : ""}`}
-            onClick={() => handleSectionClick("theme")}
-            onMouseEnter={() => setHoverSection("theme")}
-            onMouseLeave={() => setHoverSection("")}
-          >
-            <FontAwesomeIcon icon={faPalette} className="nav-icon" />
-            <span className="nav-text">Theme</span>
-          </Nav.Link>
-          <Nav.Link
-            href="#elements"
-            className={`sidebar-link ${
-              activeSection === "elements" ? "active" : ""
-            } ${hoverSection === "elements" ? "hover" : ""}`}
-            onClick={() => handleSectionClick("elements")}
-            onMouseEnter={() => setHoverSection("elements")}
-            onMouseLeave={() => setHoverSection("")}
-          >
-            <FontAwesomeIcon icon={faShapes} className="nav-icon" />
-            <span className="nav-text">Elements</span>
-          </Nav.Link>
-        </Nav>
-
-        <button onClick={toggleMainContent}>
-        {isMainContentVisible ? "Hide Main Content" : "Show Main Content"}
-      </button>
-      <button onClick={handleSave} className="save-button">
-            Save Portfolio
-          </button>
-
-        <div className="sidebar-footer">
-          <div className="footer-icon">
-            {profile.profilePictureUrl ? (
-              <img
-                src={profile.profilePictureUrl}
-                alt="Profile"
-                className="footer-profile-image"
-              />
-            ) : (
-              <div className="footer-image-placeholder">No Image</div>
-            )}
-          </div>
-        </div>
-      </div>
+      <Sidebar
+      activeSection={activeSection}
+      hoverSection={hoverSection}
+      handleSectionClick={handleSectionClick}
+      setHoverSection={setHoverSection}
+      toggleMainContent={toggleMainContent}
+      isMainContentVisible={isMainContentVisible}
+      handleSave={handleSave}
+      profile={profile}
+    />
 
       <div className="main-content">
 
