@@ -538,3 +538,57 @@ html, body {
   font-size: 16px; /* Font size for height display */
   color: #da9733;
 }
+
+
+/* Other elemets sa shapes */
+.element-block {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  background-color: #1dd1a1;
+}
+
+.square-textbox {
+  border-radius: 0%;
+}
+
+.circle-textbox {
+  border-radius: 50%;
+}
+
+.rounded-textbox {
+  border-radius: 15%;
+}
+
+.heart {
+  width: 100px; /* Width of the heart */
+  height: 100px; /* Height of the heart */
+  background-color: #1dd1a1; /* Heart color */
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Define heart shape */
+  margin: 10px; /* Margin around the heart */
+  position: relative; /* Relative position for dragging */
+}
+
+
+
+
+
+.hexagon {
+  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid #1dd1a1;
+}
+
+.pentagon {
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+.star {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}

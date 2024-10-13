@@ -90,7 +90,6 @@
 
 /* Positioning the shapes around the text */
 .landing-shape-left-top {
-    top: 10%;
     left: -3%;
     transform: translate(-50%, -50%) rotate(30deg);
 }
@@ -102,7 +101,6 @@
 }
 
 .landing-shape-right-top {
-    top: 10%;
     right: -2%;
     transform: translate(50%, -50%) rotate(-30deg);
 }
@@ -284,8 +282,7 @@
 
 /* Adjust the portfolio card positioning */
 .landing-portfolio-section {
-    position: absolute;
-    top: 120%; /* Move this lower (increase the percentage) */
+    position: absolute; /* Move this lower (increase the percentage) */
     right: 2%; /* Keep it on the right side */
     transform: translateY(-50%);
     padding-right: 20px;

@@ -239,13 +239,13 @@ const Portfolio = () => {
     if (draggedElement) {
       let newElement;
 
-      // Assign specific size and style based on shape type
+      // Define shape configurations based on the type
       if (draggedElement === "square-textbox") {
         newElement = {
           type: draggedElement,
           id: Date.now(),
           position: { x, y },
-          size: { width: 100, height: 100 }, // Square
+          size: { width: 100, height: 100 },
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
@@ -257,7 +257,7 @@ const Portfolio = () => {
           type: draggedElement,
           id: Date.now(),
           position: { x, y },
-          size: { width: 100, height: 100 }, // Circle-like dimensions
+          size: { width: 100, height: 100 },
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
@@ -269,16 +269,63 @@ const Portfolio = () => {
           type: draggedElement,
           id: Date.now(),
           position: { x, y },
-          size: { width: 150, height: 100 }, // Rectangle-like dimensions
+          size: { width: 150, height: 100 },
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
           textFont: "Arial",
           borderRadius: "15%", // Slight rounding for rounded rectangle
         };
+      } else if (draggedElement === "hexagon") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Hexagon-like dimensions
+          color: "#1dd1a1",
+          borderRadius: "0%", // No rounding for hexagon
+        };
+      } else if (draggedElement === "triangle") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Triangle-like dimensions
+          color: "#1dd1a1",
+          borderRadius: "0%", // No rounding for triangle
+        };
+      } else if (draggedElement === "pentagon") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Pentagon-like dimensions
+          color: "#1dd1a1",
+          borderRadius: "0%", // No rounding for pentagon
+        };
+      } else if (draggedElement === "star") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Star-like dimensions
+          color: "#1dd1a1",
+          borderRadius: "0%", // No rounding for star
+        };
+      } else if (draggedElement === "heart") {
+        newElement = {
+          type: draggedElement,
+          id: Date.now(),
+          position: { x, y },
+          size: { width: 100, height: 100 }, // Heart-like dimensions
+          color: "#1dd1a1",
+          borderRadius: "0%", // No rounding for heart
+        };
       }
+
+      // Add the new element to the droppedElements array
       setDroppedElements((prevElements) => [...prevElements, newElement]);
-      setDraggedElement(null);
+      setDraggedElement(null); // Reset the dragged element
     }
 
     // Handle the uploaded image
@@ -588,6 +635,35 @@ const Portfolio = () => {
                   draggable
                   onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
                 ></div>
+                <div
+                  className="element-block heart"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "heart")}
+                ></div>{" "}
+                {/* Heart shape without a block */}
+              </div>
+
+              <div className="element-row">
+                <div
+                  className="element-block hexagon"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "hexagon")}
+                ></div>
+                <div
+                  className="element-block triangle"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "triangle")}
+                ></div>
+                <div
+                  className="element-block pentagon"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "pentagon")}
+                ></div>
+                <div
+                  className="element-block star"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, "star")}
+                ></div>
               </div>
               {!editingHyperlinkId ? (
                 // Show Add Hyperlink form when no hyperlink is selected
@@ -616,7 +692,9 @@ const Portfolio = () => {
                     value={hyperlinkColor}
                     onChange={(e) => setHyperlinkColor(e.target.value)} // New state for color
                   />
-                  <button onClick={addHyperlink}>Add Hyperlink</button>
+                  <div>
+                    <button onClick={addHyperlink}>Add Hyperlink</button>
+                  </div>
                 </div>
               ) : (
                 // Show Edit Hyperlink form when a hyperlink is selected
@@ -648,7 +726,9 @@ const Portfolio = () => {
                       onChange={(e) => setEditingHyperlinkColor(e.target.value)}
                     />
                   </label>
-                  <button onClick={saveHyperlinkEdit}>Save Changes</button>
+                  <div>
+                    <button onClick={saveHyperlinkEdit}>Save Changes</button>
+                  </div>
                 </div>
               )}
               <>
