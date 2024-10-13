@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase'; 
+import { auth } from '../firebase';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { reauthenticateWithCredential, EmailAuthProvider, updateEmail, sendEmailVerification, updatePassword } from 'firebase/auth';
-import { FaUserEdit, FaEnvelope, FaLock, FaKey } from 'react-icons/fa'; // Import icons
+import { reauthenticateWithCredential, EmailAuthProvider, updateEmail, updatePassword } from 'firebase/auth';
+import { FaUserEdit, FaLock, FaImage, FaCamera } from 'react-icons/fa'; // Import FaCamera icon
 import '../css/AccountPage.css';
 
 const AccountPage = () => {
   const [currentEmail, setCurrentEmail] = useState('');
   const [currentUsername, setCurrentUsername] = useState('');
-  const [newEmail, setNewEmail] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [fieldVisible, setFieldVisible] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null); // State for selected profile picture
-  const [profilePictureUrl, setProfilePictureUrl] = useState(''); // State for profile picture URL
-  const [verificationStatus, setVerificationStatus] = useState(''); // Track verification status
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
 
   const db = getFirestore();
   const storage = getStorage();
@@ -31,7 +29,7 @@ const AccountPage = () => {
           const data = docSnap.data();
           setCurrentEmail(user.email);
           setCurrentUsername(data.username || '');
-          setProfilePictureUrl(data.profilePictureUrl || ''); // Set the profile picture URL
+          setProfilePictureUrl(data.profilePictureUrl || '');
         } else {
           console.log('No such document!');
         }
@@ -45,9 +43,9 @@ const AccountPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfilePicture(reader.result); // Store the data URL of the selected image
+        setProfilePicture(reader.result);
       };
-      reader.readAsDataURL(file); // Convert the file to a data URL
+      reader.readAsDataURL(file);
     }
   };
 
@@ -71,26 +69,16 @@ const AccountPage = () => {
     }
   };
 
-  const handleVerifyEmail = async () => {
+  const handleUpdateUsername = async () => {
     const user = auth.currentUser;
-    if (user) {
-      await sendEmailVerification(user);
-      alert('Verification email sent. Please check your inbox for the new email.');
-      setVerificationStatus('Verification email sent.');
-    }
-  };
-
-  const handleUpdateEmail = async () => {
-    const user = auth.currentUser;
-    const credential = EmailAuthProvider.credential(currentEmail, oldPassword);
     try {
-      await reauthenticateWithCredential(user, credential);
-      await updateEmail(user, newEmail);
-      alert('Email updated successfully. A verification email has been sent to your new email address.');
-      handleVerifyEmail(); // Send verification email immediately after updating
+      const docRef = doc(db, 'users', user.uid);
+      await updateDoc(docRef, { username: newUsername });
+      setCurrentUsername(newUsername);
+      alert('Username updated successfully!');
     } catch (error) {
-      console.error('Error updating email:', error);
-      alert('Error updating email: ' + error.message);
+      console.error('Error updating username:', error);
+      alert('Error updating username: ' + error.message);
     }
   };
 
@@ -111,83 +99,97 @@ const AccountPage = () => {
     }
   };
 
-  const handleUpdateUsername = async () => {
-    const user = auth.currentUser;
-    try {
-      const docRef = doc(db, 'users', user.uid);
-      await updateDoc(docRef, { username: newUsername });
-      alert('Username updated successfully!');
-    } catch (error) {
-      console.error('Error updating username:', error);
-      alert('Error updating username: ' + error.message);
-    }
-  };
-
   const toggleField = (field) => {
     setFieldVisible(fieldVisible === field ? '' : field);
   };
 
   return (
-    <div className="account-settings">
-      <h2>Account Settings</h2>
-      <div className="profile-picture-section">
-        <h3>Profile Picture</h3>
-        <div className="profile-picture-container">
+    <div className="acc-container">
+      <h2 className="acc-header">Account Settings</h2>
+
+      {/* Profile Picture Section */}
+      <div className="acc-profile-picture-section">
+        <label htmlFor="profile-upload" className="acc-profile-upload-label">
           {profilePictureUrl ? (
-            <img src={profilePictureUrl} alt="Profile" className="profile-image" />
+            <img className="acc-profile-picture" src={profilePictureUrl} alt="Profile" />
           ) : (
-            <div className="image-placeholder">No Image</div>
+            <div className="acc-no-image">No Image</div>
           )}
+          <FaCamera className="acc-camera-icon" />
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          id="profile-upload"
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+        />
+        <div className="acc-profile-picture-save">
+          <button className="acc-button" onClick={handleSaveProfilePicture}>
+            <FaImage /> Save Profile Picture
+          </button>
         </div>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {profilePicture && (
-          <button onClick={handleSaveProfilePicture}>Save Profile Picture</button>
-        )}
       </div>
 
-      <p>Current Email: {currentEmail}</p>
-      <p>Current Username: {currentUsername}</p>
+      {/* Display current username and email */}
+      <div className="acc-current-info">
+        <p><strong>Current Username:</strong> {currentUsername}</p>
+        <p><strong>Current Email:</strong> {currentEmail}</p>
+      </div>
 
-      <button onClick={() => toggleField('username')}>Change Username</button>
+      {/* Change Username Section */}
+      <button className="acc-button" onClick={() => toggleField('username')}>
+        <FaUserEdit /> Change Username
+      </button>
       {fieldVisible === 'username' && (
-        <div className="username-update acc-update">
+        <div className="acc-field-section">
           <input
+            className="acc-input"
             type="text"
-            placeholder="New username"
+            placeholder="New Username"
             value={newUsername}
             onChange={(e) => setNewUsername(e.target.value)}
-            className="acc-input"
           />
-          <button className="acc-btn" onClick={handleUpdateUsername}>
+          <button className="acc-button acc-save-btn" onClick={handleUpdateUsername}>
             Update Username
           </button>
         </div>
       )}
 
-      <button className="acc-btn" onClick={() => toggleField('password')}>
-        <FaLock className="acc-btn-icon" /> Change Password
+      {/* Change Password Section */}
+      <button className="acc-button" onClick={() => toggleField('password')}>
+        <FaLock /> Change Password
       </button>
       {fieldVisible === 'password' && (
-        <div className="password-update acc-update">
+        <div className="acc-field-section">
           <input
+            className="acc-input"
             type="password"
             placeholder="Old password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            className="acc-input"
           />
           <input
+            className="acc-input"
             type="password"
             placeholder="New password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="acc-input"
           />
-          <button className="acc-btn" onClick={handleUpdatePassword}>
+          <button className="acc-button acc-save-btn" onClick={handleUpdatePassword}>
             Update Password
           </button>
         </div>
       )}
+       <div className="acc-go-back-container">
+        <button
+          className="acc-go-back-button"
+          onClick={() => window.location.href = '/template'}
+          aria-label="Go back to templates"
+        >
+          Go Back to Templates
+        </button>
+      </div>
     </div>
   );
 };

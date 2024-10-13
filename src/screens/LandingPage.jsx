@@ -75,22 +75,22 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-        {/* Top bar */}
-        <div className="landing-top-bar">
-          <div className="landing-top-bar-left">
-            <img src={logo} alt="PORTHUB Logo" className="logo" />
-          </div>
-          <div className="landing-top-bar-center">
-            <button className="landing-top-bar-btn templates-btn" onClick={handleTemplatesClick}>
-              Templates
-            </button>
-          </div>
-          <div className="landing-top-bar-right">
-            <button className="landing-top-bar-btn login-btn" onClick={handleLoginClick}>
-              Login
-            </button>
-          </div>
+      {/* Top bar */}
+      <div className="landing-top-bar">
+        <div className="landing-top-bar-left">
+          <img src={logo} alt="PORTHUB Logo" className="logo" />
         </div>
+        <div className="landing-top-bar-center">
+          <button className="landing-top-bar-btn templates-btn" onClick={handleTemplatesClick}>
+            Templates
+          </button>
+        </div>
+        <div className="landing-top-bar-right">
+          <button className="landing-top-bar-btn login-btn" onClick={handleLoginClick}>
+            Login
+          </button>
+        </div>
+      </div>
 
       {/* Main Content */}
       <Container fluid>
@@ -113,19 +113,20 @@ const LandingPage = () => {
             </div>
           </Col>
 
-
           {/* Right Section: Portfolio */}
           <Col md={4} className="landing-portfolio-section d-flex justify-content-end">
             <img src={dumbbell} alt="Dumbbell" className="landing-dumbbell-img" />
             <Card className="landing-portfolio-card tilt-element">
               <div className="landing-oval-shape"></div>
               <div className="customize-portfolio-left">
-              <h2 className="customize-portfolio-title">You can customize your portfolio<br/> with this amazing fonts and color</h2>
-            </div>
+                <h2 className="customize-portfolio-title">
+                  You can customize your portfolio<br /> with this amazing fonts and color
+                </h2>
+              </div>
               <Card.Body>
                 <div className="landing-portfolio-header">
                   <div className="landing-portfolio-avatar-container">
-                  <img src={portfolio} alt="PORTHUB Logo" className="landing-portfolio-avatar" />
+                    <img src={portfolio} alt="PORTHUB Logo" className="landing-portfolio-avatar" />
                   </div>
                   <div className="landing-portfolio-info">
                     <h5>John the Builder</h5>
@@ -145,7 +146,7 @@ const LandingPage = () => {
       </Container>
 
       {/* Centered Text with Gradient Shapes */}
-      <div className="landing-centered-text">
+      <div className="landing-centered-text text-center">
         <div className="landing-gradient-shape landing-shape-left-top"></div>
         <div className="landing-gradient-shape landing-shape-left-bottom"></div>
         <div className="landing-gradient-shape landing-shape-right-top"></div>
@@ -160,11 +161,10 @@ const LandingPage = () => {
         <button className="landing-sign-up-btn sparkle-effect" onClick={handleSignUpClick}>
           Sign-up
         </button>
-
       </div>
 
       {/* Footer */}
-      <footer className="landing-footer">
+      <footer className="landing-footer text-center">
         FOOTER @2024
       </footer>
     </div>

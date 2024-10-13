@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import templates from '../components/templates'; 
 import '../css/CardButton.css';
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 
 const Template = () => {
   const { user } = useAuth();
