@@ -148,9 +148,9 @@ const EditPortfolio = () => {
                   src={element.content}
                   alt="Element"
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
+                    // width: '100%',
+                    // height: '100%',
+                    // objectFit: 'cover',
                     ...templateStyles.image, // Apply image styles
                   }}
                 />
