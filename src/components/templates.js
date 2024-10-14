@@ -10,7 +10,7 @@ const templates = [
     name: 'Simple Template',
     styles: {
       card: {
-        backgroundColor: '#ffa500',
+        backgroundColor: '#FFC0CB',
         borderRadius: '8px',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         padding: '.25rem',
@@ -36,14 +36,14 @@ const templates = [
       },
     },
     elements: [
-      { id: 'text1', type: 'text', position: {x: 600, y: 0}, content: 'Title of Website' },
-      { id: 'text1', type: 'text', position: {x: 800, y: 100}, content: 'Input your name!' },
-      { id: 'text1', type: 'text', position: {x: 800, y: 200}, content: 'Place Subheading here' },
-      { id: 'text1', type: 'text', position: {x: 800, y: 300}, content: 'Write your description here!' },
+      { id: 'text1', type: 'text', position: {x: 600, y: 0}, content: 'Title of Website', size: {width: 200, height: 50} },
+      { id: 'text2', type: 'text', position: {x: 800, y: 100}, content: 'Input your name!', size: {width: 250, height: 80} },
+      { id: 'text3', type: 'text', position: {x: 800, y: 200}, content: 'Place Subheading here', size: {width: 250, height: 80}  },
+      { id: 'text4', type: 'text', position: {x: 800, y: 300}, content: 'Write your description here!', size: {width: 250, height: 80}  },
       { id: 'image', type: 'image', position: {x: 300, y: 100}, content: simpleTempImage},
-      { id: 'text1', type: 'text', position: {x: 1100, y: 100}, content: 'Additional Info' },
-      { id: 'text1', type: 'text', position: {x: 1100, y: 200}, content: 'Place details here!' },
-      { id: 'text1', type: 'text', position: {x: 1100, y: 300}, content: 'Subheading!' },
+      { id: 'text5', type: 'text', position: {x: 1100, y: 100}, content: 'Additional Info', size: {width: 250, height: 80} },
+      { id: 'text6', type: 'text', position: {x: 1100, y: 200}, content: 'Place details here!', size: {width: 250, height: 80}  },
+      { id: 'text7', type: 'text', position: {x: 1100, y: 300}, content: 'Subheading!', size: {width: 250, height: 80} },
     ],
   },
   {
