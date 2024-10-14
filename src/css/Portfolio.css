@@ -91,8 +91,9 @@ html, body {
 
 /* Sidebar Footer */
 .sidebar-footer {
-  text-align: center;
+  text-align: justify;
   margin-top: auto;
+  margin-right: 7%;
 }
 
 /* Footer Icon */
@@ -103,6 +104,72 @@ html, body {
   overflow: hidden; /* Prevent overflow */
   margin: 0 auto; /* Center horizontally */
 }
+
+/* yung save profile */
+
+.toggle-button,
+.save-button {
+  display: flex;
+  background-color: #7077a1;
+  flex-direction: column; /* Stack icon and text vertically */
+  align-items: center; /* Center icon and text horizontally */
+  justify-content: center; /* Center icon and text vertically */
+  padding: 15px; /* Adjust padding to fit original size */
+  margin-bottom: 15px; /* Space between links/buttons */
+  border-radius: 15px; /* Rounded corners */
+  font-size: 0.9em; /* Font size to match */
+  color: #fff; /* Text color */
+  text-decoration: none; /* No underline */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease; /* Transition effects */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Initial shadow */
+  cursor: pointer; /* Pointer cursor */
+  width: 100%; /* Full width to match sidebar */
+  max-width: 200px; /* Adjust max width to match Theme and Elements */
+  height: 100px; /* Set height to align with Theme and Elements */
+}
+
+.toggle-button:hover,
+.save-button:hover {
+  background-color: rgba(45, 50, 80, 0.38);/* Hover background color */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Hover shadow */
+}
+
+.toggle-button.active,
+.save-button.active {
+  background-color: rgba(45, 50, 80, 0.38); /* Active background color */
+}
+
+/* Icon and Text Styling */
+.nav-icon {
+  margin-bottom: 8px; /* Space between icon and text */
+  font-size: 1.5em; /* Slightly larger icons */
+}
+
+.nav-text {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+
+
+
+/* Consistent button icon size and placement */
+.button-icon {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+/* Add some hover effect to both buttons */
+.sidebar-button:hover {
+  transform: translateY(-2px); /* Small lift effect */
+}
+
+/* Active state for when buttons are clicked */
+.sidebar-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Reduced shadow on active */
+}
+
 
 /* Main Content Area */
 .main-content {

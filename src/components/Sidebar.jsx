@@ -3,7 +3,8 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
+// import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
+import { faPalette, faShapes, faEyeSlash, faEye, faSave } from "@fortawesome/free-solid-svg-icons"; // Import icons
 
 const Sidebar = ({
   activeSection,
@@ -39,14 +40,19 @@ const Sidebar = ({
           <span className="nav-text">Elements</span>
         </Nav.Link>
       </Nav>
+      <button
+          onClick={toggleMainContent}
+          className="toggle-button"
+        >
+          <FontAwesomeIcon icon={isMainContentVisible ? faEyeSlash : faEye} className="nav-icon" />
+          <span className="nav-text">{isMainContentVisible ? "Hide Main Content" : "Show Main Content"}</span>
+        </button>
 
-      <button onClick={toggleMainContent}>
-        {isMainContentVisible ? "Hide Main Content" : "Show Main Content"}
-      </button>
-      <button onClick={handleSave} className="save-button">
-        Save Portfolio
-      </button>
-
+        <button onClick={handleSave} className="save-button"> 
+          <FontAwesomeIcon icon={faSave} className="nav-icon" />
+          <span className="nav-text">Save Portfolio</span>
+        </button>
+        
       <div className="sidebar-footer">
         <div className="footer-icon">
           {profile.profilePictureUrl ? (
