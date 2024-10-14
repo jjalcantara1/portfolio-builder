@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getFirestore, collection, query, where, onSnapshot } from "firebase/firestore"; // Use onSnapshot for real-time updates
-import "../css/UserPortfolio.css";
+import "../css/UserPortfolio.css"; // Ensure correct styling for text
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'; // Import necessary icons
 
@@ -30,6 +30,16 @@ const UserPortfolio = () => {
     // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, [username, db]);
+
+  // Function to handle formatting text with line breaks
+  const formatText = (text) => {
+    return text.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  };
 
   return (
     <div className="user-portfolio-container">
@@ -144,7 +154,6 @@ const UserPortfolio = () => {
               </a>
             );
           }
-    
 
           // Default case: handle other types of elements
           return (
@@ -162,13 +171,14 @@ const UserPortfolio = () => {
                 border: "none", // Ensure no borders on default elements
                 color: element.fontColor || "#000", // Text color
                 fontFamily: element.textFont || "Arial", // Text font
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: "block", // Prevent vertical centering
                 cursor: "default",
+                fontWeight: 'normal',  // Ensure font weight is normal
+                padding: '20px', // Add padding for spacing between text and border
+                boxSizing: 'border-box', // Include padding in width/height calculations
               }}
             >
-              {element.text || element.content || ""}  {/* Render text or other content */}
+              {formatText(element.text || element.content || "")}  {/* Use formatText for rendering */}
             </div>
           );
         })}
