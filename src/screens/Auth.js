@@ -19,7 +19,7 @@ const Auth = () => {
     e.preventDefault();
     if (isRegister) {
       // Handle registration logic
-      const restrictedUsernames = ['auth', 'edit', 'email-verification', 'logout', 'forgot-password']; // Restricted usernames
+      const restrictedUsernames = ['auth', 'edit', 'email-verification', 'logout', 'forgot-password', 'portfolio', 'templates']; // Restricted usernames
 
       // Check if the username is restricted
       if (restrictedUsernames.includes(username)) {

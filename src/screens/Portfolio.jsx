@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Nav } from "react-bootstrap";
 import "../css/Portfolio.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'; // Import necessary icons
 import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
@@ -12,11 +13,7 @@ import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css"; // Import styles for resizable element
 import Sidebar from "../components/Sidebar";
-import {
-  faFacebook,
-  faInstagram,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+
 
 const ImageUpload = ({ onImageUpload }) => {
   // Remove uploadedImageUrl from props
@@ -804,50 +801,55 @@ const Portfolio = () => {
                 position: "relative",
               }}
             >
-              {droppedElements.map((element) => {
-                if (element.type === "hyperlink") {
-                  return (
-                    <div
-                      key={element.id}
-                      style={{
-                        position: "absolute",
-                        left: element.position.x,
-                        top: element.position.y,
-                        cursor: "move",
-                        color: element.color,
-                      }}
-                      onClick={() =>
-                        window.open(element.url, "_blank") &&
-                        selectHyperlinkForEdit(element.id)
-                      }
-                      onDragStart={(e) => handleElementDragStart(e, element)}
-                      draggable // Enable dragging
+            {droppedElements.map((element) => {
+              if (element.type === "hyperlink") {
+                return (
+                  <div
+                    key={element.id}
+                    style={{
+                      position: "absolute",
+                      left: element.position.x,
+                      top: element.position.y,
+                      cursor: "move",
+                      color: element.color,
+                    }}
+                    onDragStart={(e) => handleElementDragStart(e, element)}
+                    draggable // Enable dragging
+                  >
+                    {/* Use an <a> tag to ensure direct URL redirection */}
+                    <a
+                      href={element.url.startsWith('http') ? element.url : `http://${element.url}`} // Make sure URL has http or https
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: 'none' }} // Prevent underline
                     >
-                      {/* Display the logo instead of text */}
+                      {/* Display the logo using FontAwesome */}
                       {element.logo === "facebook" && (
                         <FontAwesomeIcon
                           icon={faFacebook}
                           size="2x"
-                          style={{ color: element.color }} // Apply color here
+                          style={{ color: element.color }}
                         />
                       )}
                       {element.logo === "instagram" && (
                         <FontAwesomeIcon
                           icon={faInstagram}
                           size="2x"
-                          style={{ color: element.color }} // Apply color here
+                          style={{ color: element.color }}
                         />
                       )}
                       {element.logo === "twitter" && (
                         <FontAwesomeIcon
                           icon={faTwitter}
                           size="2x"
-                          style={{ color: element.color }} // Apply color here
+                          style={{ color: element.color }}
                         />
                       )}
-                    </div>
-                  );
-                }
+                    </a>
+                  </div>
+                );
+              }
+        
 
                 if (element.type === "uploaded-image") {
                   return (

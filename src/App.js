@@ -34,7 +34,11 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/email-verification" element={<EmailVerification />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio"element={
+            <ProtectedRoute>
+              <Portfolio />
+            </ProtectedRoute>
+          } />
 
           {/* Protected Routes */}
           <Route 
