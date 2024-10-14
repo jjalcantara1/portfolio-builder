@@ -119,6 +119,7 @@ html, body {
 /* Left Content */
 .left-content {
   flex-basis: 65%; /* Larger left section */
+  margin-left: -3%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -518,25 +519,74 @@ html, body {
 .canvas {
   position: relative;
   flex-grow: 1;
+  background-color: #f4f4f9;
 }
 
 .control-panel {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 380px;
   margin-bottom: 10px;
+  padding: 10px 0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
-.control-panel button {
-  padding: 5px 10px;
+.control-panel .height-control, .zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-panel .control-btn {
+  border: none;
+  background-color: #f4f4f9;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 20px; /* Larger font for visibility */
+  transition: background-color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.control-panel span {
-  margin-left: 10px;
-  font-size: 16px; /* Font size for height display */
-  color: #da9733;
+.control-panel .control-btn:hover {
+  background-color: #e0e0e5;
+  transform: scale(1.1);
+}
+
+.control-panel .control-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: #5a5a66;
+}
+
+.control-panel .control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-panel .control-label {
+  font-size: 16px;
+  color: #5a5a66;
+  margin-right: 10px;
+}
+
+.drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+  background-color: #ffffff;
+}
+
+.zoomable-area {
+  position: relative;
+  transition: transform 0.3s ease-in-out;
 }
 
 

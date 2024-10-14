@@ -748,17 +748,38 @@ const Portfolio = () => {
           )}
         </div>
         <div className="canvas">
-          <div className="control-panel">
-            <div>
-              <span style={{ fontSize: "16px" }}>Height:</span>
-              <button onClick={increaseHeight}>+</button>
-              <button onClick={decreaseHeight}>-</button>
+            <div className="control-panel">
+              {/* Height Control */}
+              <div className="height-control">
+                <span className="control-label">Height:</span>
+                <button className="control-btn" onClick={increaseHeight} title="Increase Height">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 5v14m7-7H5" stroke="currentColor" strokeWidth="2" fill="none" />
+                  </svg>
+                </button>
+                <button className="control-btn" onClick={decreaseHeight} title="Decrease Height">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" fill="none" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Zoom Control */}
+              <div className="zoom-control">
+                <span className="control-label">Zoom:</span>
+                <button className="control-btn" onClick={handleZoomIn} title="Zoom In">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" fill="currentColor" />
+                  </svg>
+                </button>
+                <button className="control-btn" onClick={handleZoomOut} title="Zoom Out">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M5 11h14v2H5v-2z" fill="currentColor" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div>
-              <button onClick={handleZoomIn}>Zoom In</button>
-              <button onClick={handleZoomOut}>Zoom Out</button>
-            </div>
-          </div>
+
           {/* Right-side Drop Area */}
           <div
             className={`drop-area ${
