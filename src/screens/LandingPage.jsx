@@ -75,8 +75,9 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      {/* Top bar */}
-      <div className="landing-top-bar">
+
+
+      <div className="landingcon">
         <div className="landing-top-bar-left">
           <img src={logo} alt="PORTHUB Logo" className="logo" />
         </div>
@@ -92,13 +93,33 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <Container fluid>
-        <Row className="align-items-center">
-          {/* Left Section: Social Media Cards */}
-          <Col md={2} className="landing-social-media-cards-container">
-            <div className="landing-social-media-cards">
-              <div className="landing-social-card instagram-card tilt-element">
+      
+            
+      
+
+    
+      <div id="shapecon">
+      <div className="landing-gradient-shape landing-shape-left-top"></div>
+        <div className="landing-gradient-shape landing-shape-left-bottom"></div>
+        <div className="landing-gradient-shape landing-shape-right-top"></div>
+        <div className="landing-gradient-shape landing-shape-right-bottom"></div>
+
+      </div>
+
+        <div id="maincontitle">
+          <h1 id="maintitle">Find here for your next best portfolio</h1>
+          <p class="landing-description-text">
+            No more manual portfolio designs! With us, unlock inspiring portfolio designs in mere seconds—no need to spend hours brainstorming.
+            Get ready to showcase your best work effortlessly.
+          </p>
+          <button className="landing-sign-up-btn sparkle-effect" onClick={handleSignUpClick}>
+            Sign-up
+          </button>
+        </div>
+        
+      <div>
+        <div id="socialcardscon">
+        <div className="landing-social-card instagram-card tilt-element">
                 <i className="fab fa-instagram"></i>
               </div>
               <div className="landing-social-card twitter-card tilt-element">
@@ -110,13 +131,10 @@ const LandingPage = () => {
               <div className="landing-social-card tiktok-card tilt-element">
                 <i className="fab fa-tiktok"></i>
               </div>
-            </div>
-          </Col>
-
-          {/* Right Section: Portfolio */}
-          <Col md={4} className="landing-portfolio-section d-flex justify-content-end">
-            <img src={dumbbell} alt="Dumbbell" className="landing-dumbbell-img" />
-            <Card className="landing-portfolio-card tilt-element">
+      </div>
+        </div>
+        <div id="johncardcon">
+        <Card className="landing-portfolio-card tilt-element">
               <div className="landing-oval-shape"></div>
               <div className="customize-portfolio-left">
                 <h2 className="customize-portfolio-title">
@@ -141,31 +159,11 @@ const LandingPage = () => {
                 </div>
               </Card.Body>
             </Card>
-          </Col>
-        </Row>
-      </Container>
+        </div>
+    
 
-      {/* Centered Text with Gradient Shapes */}
-      <div className="landing-centered-text text-center">
-        <div className="landing-gradient-shape landing-shape-left-top"></div>
-        <div className="landing-gradient-shape landing-shape-left-bottom"></div>
-        <div className="landing-gradient-shape landing-shape-right-top"></div>
-        <div className="landing-gradient-shape landing-shape-right-bottom"></div>
-
-        {/* Main Text */}
-        <h1>Find here for your next best portfolio</h1>
-        <p className="landing-description-text">
-          No more manual portfolio designs! With us, unlock inspiring portfolio designs in mere seconds—no need to spend hours brainstorming.
-          Get ready to showcase your best work effortlessly.
-        </p>
-        <button className="landing-sign-up-btn sparkle-effect" onClick={handleSignUpClick}>
-          Sign-up
-        </button>
-      </div>
-
-      {/* Footer */}
       <footer className="landing-footer text-center">
-        FOOTER @2024
+        PORTHUB @2024
       </footer>
     </div>
   );

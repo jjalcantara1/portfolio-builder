@@ -1,3 +1,152 @@
+body {
+    overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+    .landingcon {
+        transform: scale(0.6);
+        gap: 1rem !important;
+        margin: 0 auto;
+        max-width: 4rem !important;
+    }
+
+    .landing-centered-text {
+        position: relative;
+        top: -90%; /* Adjust this to control vertical positioning */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ccd2e5; /* Light grey-blue color similar to the image */
+        font-size: 1.5rem;
+        text-align: center;
+        z-index: 10;
+        max-width: 80%; /* Prevents overflow for longer text */
+        font-weight: 400; /* Adjust font weight to match the sleek look */
+    }
+
+    .landing-description-text {
+        font-size: .90rem;
+        margin-top: 1rem;
+        color: #c0c0c0;
+        max-width: 18rem !important;
+    }
+
+    #maintitle {
+        color: white;
+        font-weight: 500;
+        font-size: 46px !important;
+        width: 80%;
+    }
+
+    #shapecon {
+        position: absolute;
+        height: 100vh !important;
+        z-index: 1;
+        width: 35rem !important;
+        margin-left: -3.5rem !important;
+        transform: scale(0.75);
+    }
+
+    #socialcardscon {
+        display: flex;
+        justify-content: center;
+        width: 80%;
+        height: 15rem;
+        margin: 0 auto;
+     }
+
+     #johncardcon {
+        width: 90%;
+        display: flex;
+        justify-content: right;
+        margin-top: 0 !important;
+        margin: 0 auto;
+        transform: scale(0.5) !important;
+        height: 25rem;
+    }
+    
+}
+
+@media (max-width: 1024px) {
+    
+    .landingcon {
+        transform: scale(.9);
+        margin: 0 auto;
+        max-width: 5rem;
+        gap: 1rem !important;
+    }
+
+    #shapecon {
+        position: absolute;
+        
+    }
+
+    #johncardcon {
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        margin-top: -15rem;
+        transform: scale(0.5);
+        margin-left: 5rem;
+    }
+}
+
+#johncardcon {
+    width: 90%;
+    display: flex;
+    justify-content: right;
+    margin-top: -15rem;
+    margin-bottom: 20rem;
+}
+
+#socialcardscon {
+   display: flex;
+   justify-content: left;
+   width: 80%;
+   padding-left: 5rem;
+   margin-top: 10rem;
+   height: 10rem;
+}
+
+#shapecon {
+    position: absolute;
+    height: 100vh;
+    z-index: 1;
+    width: 90%;
+    top: 30%;
+    left: 0;
+    margin-left: 5rem;
+}
+
+
+#maintitle {
+    color: white;
+    font-weight: 600;
+    font-size: 5rem;
+    width: 80%;
+}
+
+#maincontitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+
+}
+
+.landingcon {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    gap: 10rem;
+    align-items: center;
+    padding: 2rem;
+}
+
 .landing-page {
     background-color: #131722;
     height: 100vh;
@@ -132,6 +281,7 @@
     font-size: 1.1rem;
     margin-top: 1rem;
     color: #c0c0c0;
+    width: 80%;
 }
 
 /* Sign-up button with sparkling effect */
@@ -439,12 +589,18 @@
 
 
   
-
-/* Footer */
 .landing-footer {
     background-color: #1f2636;
-    padding: 1rem 2rem;
     color: #fff;
     text-align: center;
-    margin-top: -130px;  /* Adjust this value to your liking */
+    position: fixed;
+    bottom: 0; /* Ensures it's at the bottom of the screen */
+    height: 2rem; /* Sets the desired height */
+    width: 100%; /* Ensures it spans the entire width */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically centers the content */
+    opacity: 90%;
+    font-size: 12px;
+    font-weight: 400;
 }
