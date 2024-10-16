@@ -15,7 +15,7 @@ const UserPortfolio = () => {
   useEffect(() => {
     const usersCollection = collection(db, "users");
     const q = query(usersCollection, where("username", "==", username));
-    
+
     // Use onSnapshot to listen for real-time updates
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       if (!querySnapshot.empty) {
@@ -155,7 +155,7 @@ const UserPortfolio = () => {
             );
           }
 
-          // Default case: handle other types of elements
+          // Default case: handle other types of elements (text)
           return (
             <div
               className={`dropped-element ${element.type} ${element.customClass || ""}`} // Apply shape-specific class
@@ -171,14 +171,48 @@ const UserPortfolio = () => {
                 border: "none", // Ensure no borders on default elements
                 color: element.fontColor || "#000", // Text color
                 fontFamily: element.textFont || "Arial", // Text font
-                display: "block", // Prevent vertical centering
+                display: "flex", // Use flex to center the textarea
+                justifyContent: "center",
+                alignItems: "center",
                 cursor: "default",
-                fontWeight: 'normal',  // Ensure font weight is normal
                 padding: '20px', // Add padding for spacing between text and border
                 boxSizing: 'border-box', // Include padding in width/height calculations
               }}
             >
-              {formatText(element.text || element.content || "")}  {/* Use formatText for rendering */}
+              <div
+                style={{
+                  height: "100%",
+                  width: "100%", // Ensure the div takes the full size of the element
+                  display: "flex",
+                  justifyContent: "center", // Center text horizontally
+                  alignItems: "center", // Center text vertically
+                  padding: 0,
+                }}
+                onClick={(e) => e.stopPropagation()} // Prevent parent click event when editing
+              >
+                <textarea
+                  value={element.text}
+                  readOnly
+                  style={{
+                    width: "80%",
+                    height: "80%",
+                    border: "none",
+                    outline: "none",
+                    boxSizing: "border-box",
+                    fontSize: `${element.fontSize}px`,
+                    color: element.fontColor,
+                    fontFamily: element.textFont,
+                    backgroundColor: "transparent",
+                    cursor: "text",
+                    margin: 0,
+                    padding: "10px",
+                    textAlign: "center",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              </div>
             </div>
           );
         })}

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Nav } from "react-bootstrap";
 import "../css/Portfolio.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons'; // Import necessary icons
-import { faPalette, faShapes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebook,
+  faInstagram,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons"; // Import necessary icons
+import { faPalette, faShapes, faLink } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar";
 import { auth } from "../firebase";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore"; // Import setDoc
@@ -13,7 +17,6 @@ import Draggable from "react-draggable";
 import { Resizable } from "react-resizable";
 import "react-resizable/css/styles.css"; // Import styles for resizable element
 import Sidebar from "../components/Sidebar";
-
 
 const ImageUpload = ({ onImageUpload }) => {
   // Remove uploadedImageUrl from props
@@ -222,6 +225,10 @@ const Portfolio = () => {
     };
   }, [selectedElementId, isTextFocused]);
 
+  const handleBackgroundClick = (e) => {
+    setSelectedElementId(null);
+  };
+
   const handleDragStart = (e, element) => {
     setDraggedElement(element);
     e.dataTransfer.effectAllowed = "move";
@@ -246,6 +253,7 @@ const Portfolio = () => {
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
+          fontSize: 12,
           textFont: "Arial",
           borderRadius: "0%", // No rounding for square
         };
@@ -258,8 +266,9 @@ const Portfolio = () => {
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
+          fontSize: 12,
           textFont: "Arial",
-          borderRadius: "50%", // Fully rounded for circle
+          borderRadius: "30%", // Fully rounded for circle
         };
       } else if (draggedElement === "rounded-textbox") {
         newElement = {
@@ -270,6 +279,7 @@ const Portfolio = () => {
           text: "",
           color: "#1dd1a1",
           fontColor: "#000000",
+          fontSize: 12,
           textFont: "Arial",
           borderRadius: "15%", // Slight rounding for rounded rectangle
         };
@@ -280,6 +290,9 @@ const Portfolio = () => {
           position: { x, y },
           size: { width: 100, height: 100 }, // Hexagon-like dimensions
           color: "#1dd1a1",
+          fontColor: "#000000",
+          fontSize: 12,
+          textFont: "Arial",
           borderRadius: "0%", // No rounding for hexagon
         };
       } else if (draggedElement === "triangle") {
@@ -289,6 +302,9 @@ const Portfolio = () => {
           position: { x, y },
           size: { width: 100, height: 100 }, // Triangle-like dimensions
           color: "#1dd1a1",
+          fontColor: "#000000",
+          fontSize: 12,
+          textFont: "Arial",
           borderRadius: "0%", // No rounding for triangle
         };
       } else if (draggedElement === "pentagon") {
@@ -298,6 +314,9 @@ const Portfolio = () => {
           position: { x, y },
           size: { width: 100, height: 100 }, // Pentagon-like dimensions
           color: "#1dd1a1",
+          fontColor: "#000000",
+          fontSize: 12,
+          textFont: "Arial",
           borderRadius: "0%", // No rounding for pentagon
         };
       } else if (draggedElement === "star") {
@@ -307,6 +326,9 @@ const Portfolio = () => {
           position: { x, y },
           size: { width: 100, height: 100 }, // Star-like dimensions
           color: "#1dd1a1",
+          fontColor: "#000000",
+          fontSize: 12,
+          textFont: "Arial",
           borderRadius: "0%", // No rounding for star
         };
       } else if (draggedElement === "heart") {
@@ -315,10 +337,16 @@ const Portfolio = () => {
           id: Date.now(),
           position: { x, y },
           size: { width: 100, height: 100 }, // Heart-like dimensions
+          text: "",
           color: "#1dd1a1",
+          fontColor: "#000000",
+          fontSize: 12,
+          textFont: "Arial",
           borderRadius: "0%", // No rounding for heart
+          clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)", // Clip path for heart shape
         };
       }
+      
 
       // Add the new element to the droppedElements array
       setDroppedElements((prevElements) => [...prevElements, newElement]);
@@ -339,12 +367,29 @@ const Portfolio = () => {
     }
   };
 
+  const handleTextFocus = () => {
+    setIsTextFocused(true);
+  };
+  
+  const handleTextBlur = () => {
+    setIsTextFocused(false);
+  };
+
+  const handleFontSizeChange = (id, newSize) => {
+    setDroppedElements((prevElements) =>
+      prevElements.map((element) =>
+        element.id === id ? { ...element, fontSize: newSize } : element
+      )
+    );
+  };
+
   const handleTextChange = (id, newText) => {
     setDroppedElements((prevElements) =>
       prevElements.map((element) =>
         element.id === id ? { ...element, text: newText } : element
       )
     );
+
   };
 
   const handleDragOver = (e) => {
@@ -537,6 +582,23 @@ const Portfolio = () => {
                       }}
                     />
                   </label>
+                  <div>
+                    <label>Font Size:
+                    <input
+                      type="number"
+                      min="1"
+                      max="120"
+                      value={
+                        droppedElements.find(
+                          (element) => element.id === selectedElementId
+                        )?.fontSize || 16
+                      }
+                      onChange={(e) =>
+                        handleFontSizeChange(selectedElementId, e.target.value)
+                      }
+                    />
+                    </label>
+                  </div>
                   <label>
                     Text Font:
                     <select
@@ -636,8 +698,7 @@ const Portfolio = () => {
                   className="element-block heart"
                   draggable
                   onDragStart={(e) => handleDragStart(e, "heart")}
-                ></div>{" "}
-                {/* Heart shape without a block */}
+                ></div>
               </div>
 
               <div className="element-row">
@@ -675,6 +736,7 @@ const Portfolio = () => {
                     <option value="facebook">Facebook</option>
                     <option value="instagram">Instagram</option>
                     <option value="twitter">Twitter</option>
+                    <option value="others">Others</option>
                   </select>
                   <h4>URL:</h4>
                   <input
@@ -705,6 +767,7 @@ const Portfolio = () => {
                     <option value="facebook">Facebook</option>
                     <option value="instagram">Instagram</option>
                     <option value="twitter">Twitter</option>
+                    <option value="others">Others</option>
                   </select>
                   <label>
                     <h4>URL:</h4>
@@ -745,43 +808,93 @@ const Portfolio = () => {
           )}
         </div>
         <div className="canvas">
-            <div className="control-panel">
-              {/* Height Control */}
-              <div className="height-control">
-                <span className="control-label">Height:</span>
-                <button className="control-btn" onClick={increaseHeight} title="Increase Height">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M12 5v14m7-7H5" stroke="currentColor" strokeWidth="2" fill="none" />
-                  </svg>
-                </button>
-                <button className="control-btn" onClick={decreaseHeight} title="Decrease Height">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M5 12h14" stroke="currentColor" strokeWidth="2" fill="none" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Zoom Control */}
-              <div className="zoom-control">
-                <span className="control-label">Zoom:</span>
-                <button className="control-btn" onClick={handleZoomIn} title="Zoom In">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" fill="currentColor" />
-                  </svg>
-                </button>
-                <button className="control-btn" onClick={handleZoomOut} title="Zoom Out">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M5 11h14v2H5v-2z" fill="currentColor" />
-                  </svg>
-                </button>
-              </div>
+          <div className="control-panel">
+            {/* Height Control */}
+            <div className="height-control">
+              <span className="control-label">Height:</span>
+              <button
+                className="control-btn"
+                onClick={increaseHeight}
+                title="Increase Height"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 5v14m7-7H5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                </svg>
+              </button>
+              <button
+                className="control-btn"
+                onClick={decreaseHeight}
+                title="Decrease Height"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M5 12h14"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                </svg>
+              </button>
             </div>
+
+            {/* Zoom Control */}
+            <div className="zoom-control">
+              <span className="control-label">Zoom:</span>
+              <button
+                className="control-btn"
+                onClick={handleZoomIn}
+                title="Zoom In"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+              <button
+                className="control-btn"
+                onClick={handleZoomOut}
+                title="Zoom Out"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M5 11h14v2H5v-2z" fill="currentColor" />
+                </svg>
+              </button>
+            </div>
+          </div>
 
           {/* Right-side Drop Area */}
           <div
             className={`drop-area ${
               !isMainContentVisible ? "full-screen" : ""
             }`}
+            onClick={handleBackgroundClick}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             style={{
@@ -801,55 +914,66 @@ const Portfolio = () => {
                 position: "relative",
               }}
             >
-            {droppedElements.map((element) => {
-              if (element.type === "hyperlink") {
-                return (
-                  <div
-                    key={element.id}
-                    style={{
-                      position: "absolute",
-                      left: element.position.x,
-                      top: element.position.y,
-                      cursor: "move",
-                      color: element.color,
-                    }}
-                    onDragStart={(e) => handleElementDragStart(e, element)}
-                    draggable // Enable dragging
-                  >
-                    {/* Use an <a> tag to ensure direct URL redirection */}
-                    <a
-                      href={element.url.startsWith('http') ? element.url : `http://${element.url}`} // Make sure URL has http or https
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: 'none' }} // Prevent underline
+              {droppedElements.map((element) => {
+                if (element.type === "hyperlink") {
+                  return (
+                    <div
+                      key={element.id}
+                      style={{
+                        position: "absolute",
+                        left: element.position.x,
+                        top: element.position.y,
+                        cursor: "move",
+                        color: element.color,
+                      }}
+                      onDragStart={(e) => handleElementDragStart(e, element)}
+                      draggable // Enable dragging
+                      onClick={() => selectHyperlinkForEdit(element.id)}
                     >
-                      {/* Display the logo using FontAwesome */}
-                      {element.logo === "facebook" && (
-                        <FontAwesomeIcon
-                          icon={faFacebook}
-                          size="2x"
-                          style={{ color: element.color }}
-                        />
-                      )}
-                      {element.logo === "instagram" && (
-                        <FontAwesomeIcon
-                          icon={faInstagram}
-                          size="2x"
-                          style={{ color: element.color }}
-                        />
-                      )}
-                      {element.logo === "twitter" && (
-                        <FontAwesomeIcon
-                          icon={faTwitter}
-                          size="2x"
-                          style={{ color: element.color }}
-                        />
-                      )}
-                    </a>
-                  </div>
-                );
-              }
-        
+                      {/* Use an <a> tag to ensure direct URL redirection */}
+                      <a
+                        href={
+                          element.url.startsWith("http")
+                            ? element.url
+                            : `http://${element.url}`
+                        } // Make sure URL has http or https
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none" }} // Prevent underline
+                      >
+                        {/* Display the logo using FontAwesome */}
+                        {element.logo === "facebook" && (
+                          <FontAwesomeIcon
+                            icon={faFacebook}
+                            size="2x"
+                            style={{ color: element.color }}
+                          />
+                        )}
+                        {element.logo === "instagram" && (
+                          <FontAwesomeIcon
+                            icon={faInstagram}
+                            size="2x"
+                            style={{ color: element.color }}
+                          />
+                        )}
+                        {element.logo === "twitter" && (
+                          <FontAwesomeIcon
+                            icon={faTwitter}
+                            size="2x"
+                            style={{ color: element.color }}
+                          />
+                        )}
+                        {element.logo === "others" && (
+                          <FontAwesomeIcon
+                            icon={faLink}
+                            size="2x"
+                            style={{ color: element.color }}
+                          />
+                        )}
+                      </a>
+                    </div>
+                  );
+                }
 
                 if (element.type === "uploaded-image") {
                   return (
@@ -916,6 +1040,7 @@ const Portfolio = () => {
                         e.stopPropagation();
                         handleTextBoxClick(element.id);
                       }}
+                      onMouseDown={(e) => e.stopPropagation()} // Prevent background selection when editing or dragging
                       onDragStart={(e) => handleElementDragStart(e, element)}
                       draggable={
                         !selectedElementId || selectedElementId !== element.id
@@ -924,8 +1049,11 @@ const Portfolio = () => {
                       <div
                         style={{
                           height: "100%",
+                          width: "100%", // Ensure the div takes the full size of the element
                           display: "flex",
-                          alignItems: "center",
+                          justifyContent: "center", // Center text horizontally if needed
+                          alignItems: "center",     // Center text vertically if needed
+                          padding: 0,  
                         }}
                         onClick={(e) => e.stopPropagation()} // Prevent parent click event when editing
                       >
@@ -934,22 +1062,26 @@ const Portfolio = () => {
                           onChange={(e) =>
                             handleTextChange(element.id, e.target.value)
                           }
-                          onFocus={() => setIsTextFocused(true)}
-                          onBlur={() => setIsTextFocused(false)}
                           style={{
-                            width: "100%", // Match the width of the shape
-                            height: "100%", // Match the height of the shape
+                            width: "80%",
+                            height: "80%",
                             border: "none",
                             outline: "none",
-                            resize: "none", // Disable manual resizing
                             boxSizing: "border-box",
-                            fontSize: "16px",
-                            color: element.fontColor, // Use individual font color
-                            fontFamily: element.textFont, // Use individual font family
-                            backgroundColor: "transparent", // Transparent background to match shape
-                            overflow: "hidden", // Hide overflow so text wraps inside
-                            cursor: "text", // Text cursor when editing
+                            fontSize: `${element.fontSize}px`,
+                            color: element.fontColor,
+                            fontFamily: element.textFont,
+                            backgroundColor: "transparent",
+                            cursor: "text",
+                            margin: 0,
+                            padding: "10px",
+                            textAlign: "center",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
                           }}
+                          onFocus={handleTextFocus}  // Track when the text area gains focus
+                          onBlur={handleTextBlur}    // Track when the text area loses focus
                           onClick={(e) => {
                             e.stopPropagation();
                             handleTextBoxClick(element.id);
