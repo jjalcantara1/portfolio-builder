@@ -20,8 +20,24 @@ const UserPortfolio = () => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       if (!querySnapshot.empty) {
         const userData = querySnapshot.docs[0].data();
-        setDroppedElements(userData.droppedElements || []);
-        setDropAreaColor(userData.dropAreaColor || "#ffffff");
+        if (userData.portfolio) {
+          const elementsWithFontSize = userData.portfolio.elements.map((element) => {
+            const fontSize = element.fontSize; // Default to 12px if fontSize is missing
+            console.log(`Element ID: ${element.id}, Font Size: ${fontSize}`); // Log font size for each element
+            return {
+              ...element,
+              fontSize, // Set fontSize in the returned object
+            };
+          });
+
+          setDroppedElements(elementsWithFontSize || []);
+          setDropAreaColor(userData.portfolio.dropAreaColor || "#ffffff"); // Load background color
+          
+          console.log("Loaded portfolio elements:", userData.portfolio.elements);
+          console.log("Loaded drop area color:", userData.portfolio.dropAreaColor);
+        } else {
+          console.error("No portfolio data found!");
+        }
       } else {
         console.error("No such user portfolio exists!");
       }
@@ -30,7 +46,7 @@ const UserPortfolio = () => {
     // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, [username, db]);
-
+  
   // Function to handle formatting text with line breaks
   const formatText = (text) => {
     return text.split('\n').map((line, index) => (

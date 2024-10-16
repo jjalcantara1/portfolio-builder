@@ -185,34 +185,27 @@ const EditPortfolio = () => {
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
   };
-
-
- 
-
   useEffect(() => {
     if (templateId) {
       const selectedTemplate = templates.find((t) => t.id === templateId);
       if (selectedTemplate) {
-        const dropArea = document.querySelector('.drop-area').getBoundingClientRect();
-        
-        // Adjust elements' positions relative to the drop area
-        const adjustedElements = selectedTemplate.elements.map((element) => {
-          return {
-            ...element,
-            position: {
-              x: element.position.x / zoomLevel, // Adjust for zoom
-              y: element.position.y / zoomLevel, // Adjust for zoom
-            }
-          };
-        });
+        const adjustedElements = selectedTemplate.elements.map((element) => ({
+          ...element,
+          position: {
+            x: element.position.x / zoomLevel,
+            y: element.position.y / zoomLevel,
+          },
+        }));
   
-      setElements(selectedTemplate.elements);  // Set the elements from the template
-      setTemplateStyles(selectedTemplate.styles);  // Set the styles from the template
-      setDroppedElements(selectedTemplate.elements);  // Load the elements directly into the drop area
-    
+        setTemplateStyles(selectedTemplate.styles);
+  
+        // Clear the existing droppedElements and set to template elements
+        setDroppedElements(adjustedElements);
+  
+        console.log("Template elements loaded into droppedElements:", adjustedElements);
       }
     }
-  }, [templateId, zoomLevel]);  // Add zoomLevel to the dependency array
+  }, [templateId, zoomLevel]);
   
  
   // useEffect(() => {
@@ -460,7 +453,29 @@ const EditPortfolio = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchSavedPortfolio = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const data = userDoc.data().portfolio;
+            setDroppedElements(data.elements || []); // Load saved elements into the state
+            setDropAreaColor(data.dropAreaColor || "#ffffff"); // Set the saved drop area color
+            setTemplateStyles(data.template.styles || {}); // Set the saved template styles
+          } else {
+            console.error("No portfolio data found for this user.");
+          }
+        } catch (error) {
+          console.error("Error fetching saved portfolio data:", error);
+        }
+      }
+    };
   
+    fetchSavedPortfolio();
+  }, []);
   const handleImageClick = (id) => {
     // Trigger file input to upload a new image
     const input = document.createElement('input');
@@ -475,31 +490,64 @@ const EditPortfolio = () => {
     input.click();
   };
   
-
-  
-  
-  
-
-  // New save function
   const handleSave = async () => {
     const user = auth.currentUser;
     if (user) {
-      const docRef = doc(db, "users", user.uid);
-      await setDoc(
-        docRef,
-        {
-          ...profile,
-          dropAreaColor, // Add dropAreaColor to the saved data
-          droppedElements,
-          uploadedImageUrl,
-        },
-        { merge: true }
-      ); // Merge to keep existing data and add new
-      alert("Portfolio saved successfully!");
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+  
+        // Retrieve existing data from the user's document to preserve other information
+        const userDoc = await getDoc(userDocRef);
+        const existingData = userDoc.exists() ? userDoc.data() : {};
+  
+        // Ensure the elements are saved in a consistent structure
+        await setDoc(
+          userDocRef,
+          {
+            ...existingData,
+            portfolio: {
+              elements: droppedElements.map((element) => ({
+                id: element.id || Date.now(),
+                type: element.type || "text",
+                position: {
+                  x: element.position?.x || 0,
+                  y: element.position?.y || 0,
+                },
+                size: {
+                  width: element.size?.width || 100,
+                  height: element.size?.height || 100,
+                },
+                text: element.text || element.content || "", // Use either text or content field
+                content: element.content || element.text || "", // Ensure compatibility
+                color: element.color || "#ffffff",
+                fontColor: element.fontColor || "#000000",
+                textFont: element.textFont || "Arial",
+                borderRadius: element.borderRadius || "0%",
+                url: element.url || "",
+                iconClass: element.iconClass || "",
+                logo: element.logo || "",
+              })),
+              dropAreaColor: dropAreaColor || "#ffffff",
+              uploadedImageUrl: uploadedImageUrl || "",
+              template: {
+                templateId: templateId || "default",
+                styles: templateStyles || {},
+              },
+            },
+          },
+          { merge: true }
+        );
+        alert("Portfolio saved successfully!");
+        console.log("Saved portfolio to Firebase:", droppedElements, "Drop Area Color:", dropAreaColor);
+      } catch (error) {
+        console.error("Error saving portfolio:", error);
+        alert("Failed to save portfolio. Please try again.");
+      }
     } else {
       alert("You need to be logged in to save your portfolio.");
     }
   };
+  
 
   return (
     <div className="portfolio-container">
