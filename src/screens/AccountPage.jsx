@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { reauthenticateWithCredential, EmailAuthProvider, updateEmail, updatePassword } from 'firebase/auth';
-import { FaUserEdit, FaLock, FaImage, FaCamera } from 'react-icons/fa'; // Import FaCamera icon
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from 'firebase/storage';
+import { reauthenticateWithCredential, EmailAuthProvider, updateEmail, updatePassword, deleteUser } from 'firebase/auth';
+import { FaUserEdit, FaLock, FaImage, FaCamera, FaTrash } from 'react-icons/fa';
 import '../css/AccountPage.css';
 
 const AccountPage = () => {
@@ -12,6 +12,7 @@ const AccountPage = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
+  const [deletePassword, setDeletePassword] = useState(''); // Added state for delete password
   const [fieldVisible, setFieldVisible] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
@@ -99,6 +100,41 @@ const AccountPage = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const user = auth.currentUser;
+    const confirmation = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+
+    if (!confirmation || !user || !deletePassword) {
+      alert('Please enter your password to confirm account deletion.');
+      return;
+    }
+
+    try {
+      // Reauthenticate the user before deleting their account
+      const credential = EmailAuthProvider.credential(currentEmail, deletePassword);
+      await reauthenticateWithCredential(user, credential);
+
+      // Delete user data from Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      await deleteDoc(userDocRef);
+
+      // Delete user profile picture from Firebase Storage, if exists
+      if (profilePictureUrl) {
+        const storageRef = ref(storage, `profilePictures/${user.uid}`);
+        await deleteObject(storageRef);
+      }
+
+      // Delete the user's account from Firebase Authentication
+      await deleteUser(user);
+
+      alert('Your account has been successfully deleted.');
+      window.location.href = '/'; // Redirect to the homepage after account deletion
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert('Error deleting account: ' + error.message);
+    }
+  };
+
   const toggleField = (field) => {
     setFieldVisible(fieldVisible === field ? '' : field);
   };
@@ -181,10 +217,30 @@ const AccountPage = () => {
           </button>
         </div>
       )}
-       <div className="acc-go-back-container">
+
+      {/* Delete Account Section */}
+      <button className="acc-button acc-delete-button" onClick={() => toggleField('deleteAccount')}>
+        <FaTrash /> Delete Account
+      </button>
+      {fieldVisible === 'deleteAccount' && (
+        <div className="acc-field-section">
+          <input
+            className="acc-input"
+            type="password"
+            placeholder="Enter password to confirm"
+            value={deletePassword}
+            onChange={(e) => setDeletePassword(e.target.value)}
+          />
+          <button className="acc-button acc-save-btn" onClick={handleDeleteAccount}>
+            Confirm Account Deletion
+          </button>
+        </div>
+      )}
+
+      <div className="acc-go-back-container">
         <button
           className="acc-go-back-button"
-          onClick={() => window.location.href = '/template'}
+          onClick={() => (window.location.href = '/template')}
           aria-label="Go back to templates"
         >
           Go Back to Templates

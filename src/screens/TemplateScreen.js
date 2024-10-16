@@ -74,7 +74,7 @@ const Template = () => {
       <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
         <div id="portcon">
           <div id="cardcon">
-            <div className="template-card" onClick={() => navigate('/edit')}>
+            <div className="template-card" onClick={() => navigate('/portfolio')}>
               <h2 id="createtemp">Create your Own Template</h2>
             </div>
 
