@@ -15,22 +15,28 @@ const UserPortfolio = () => {
   useEffect(() => {
     const usersCollection = collection(db, "users");
     const q = query(usersCollection, where("username", "==", username));
-    
+  
     // Use onSnapshot to listen for real-time updates
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       if (!querySnapshot.empty) {
         const userData = querySnapshot.docs[0].data();
-        setDroppedElements(userData.droppedElements || []);
-        setDropAreaColor(userData.dropAreaColor || "#ffffff");
+        if (userData.portfolio) {
+          setDroppedElements(userData.portfolio.elements || []); // Load saved elements
+          setDropAreaColor(userData.portfolio.dropAreaColor || "#ffffff"); // Load background color
+          console.log("Loaded portfolio elements:", userData.portfolio.elements);
+          console.log("Loaded drop area color:", userData.portfolio.dropAreaColor);
+        } else {
+          console.error("No portfolio data found!");
+        }
       } else {
         console.error("No such user portfolio exists!");
       }
     });
-
+  
     // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, [username, db]);
-
+  
   // Function to handle formatting text with line breaks
   const formatText = (text) => {
     return text.split('\n').map((line, index) => (
