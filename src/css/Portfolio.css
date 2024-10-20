@@ -709,3 +709,32 @@ html, body {
 .star {
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
+
+/* TOggle yung sa taas */
+.top-toggle-container {
+  display: flex; /* Use flexbox to align items in a row */
+  justify-content: center; /* Center the toggle buttons */
+  margin: 10px 0; /* Adjust margin as needed */
+}
+
+.top-toggle-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #3a3a56; /* Default background */
+  color: white;
+  font-size: 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 0 5px; /* Space between buttons */
+  transition: background-color 0.3s;
+  flex: 1; /* Optional: make buttons take equal space */
+}
+
+.top-toggle-button.top-active {
+  background-color: #6a6a8b; /* Active state background */
+}
+
+.top-toggle-button:hover {
+  background-color: #565675; /* Hover state background */
+}
+

@@ -84,6 +84,7 @@ const Portfolio = () => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const [isTextFocused, setIsTextFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState("textboxes");
+  const [topActiveTab, setTopActiveTab] = useState("elements");
 
   const db = getFirestore();
 
@@ -719,54 +720,90 @@ const Portfolio = () => {
             </div>
           )}
 
-          {activeSection === "elements" && (
+{activeSection === "elements" && (
             <div className="elements-section">
               <h3>Elements</h3>
-              <div className="element-row">
-                <div
-                  className="element-block square-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "square-textbox")}
-                ></div>
-                <div
-                  className="element-block circle-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "circle-textbox")}
-                ></div>
-                <div
-                  className="element-block rounded-textbox"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
-                ></div>
-                <div
-                  className="element-block heart"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "heart")}
-                ></div>
+              <div className="top-toggle-container">
+                <button
+                  className={`top-toggle-button ${topActiveTab === "elements" ? "top-active" : ""}`}
+                  onClick={() => setTopActiveTab("elements")}
+                >
+                  Shapes
+                </button>
+                <button
+                  className={`top-toggle-button ${topActiveTab === "images" ? "top-active" : ""}`}
+                  onClick={() => setTopActiveTab("images")}
+                >
+                  Image
+                </button>
               </div>
 
-              <div className="element-row">
-                <div
-                  className="element-block hexagon"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "hexagon")}
-                ></div>
-                <div
-                  className="element-block triangle"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "triangle")}
-                ></div>
-                <div
-                  className="element-block pentagon"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "pentagon")}
-                ></div>
-                <div
-                  className="element-block star"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, "star")}
-                ></div>
-              </div>
+              {topActiveTab === "elements" && (
+                <>
+                  <div className="element-row">
+                    <div
+                      className="element-block square-textbox"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "square-textbox")}
+                    ></div>
+                    <div
+                      className="element-block circle-textbox"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "circle-textbox")}
+                    ></div>
+                    <div
+                      className="element-block rounded-textbox"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "rounded-textbox")}
+                    ></div>
+                    <div
+                      className="element-block heart"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "heart")}
+                    ></div>
+                  </div>
+                  <div className="element-row">
+                    <div
+                      className="element-block hexagon"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "hexagon")}
+                    ></div>
+                    <div
+                      className="element-block triangle"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "triangle")}
+                    ></div>
+                    <div
+                      className="element-block pentagon"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "pentagon")}
+                    ></div>
+                    <div
+                      className="element-block star"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, "star")}
+                    ></div>
+                  </div>
+                </>
+              )}
+
+  
+              {topActiveTab === "images" && (
+                <>
+                  <h3>Image Upload</h3>
+                  <ImageUpload onImageUpload={handleImageUpload} />
+                  {uploadedImageUrl && (
+                    <div className="uploaded-image">
+                      <img
+                        src={uploadedImageUrl}
+                        alt="Uploaded"
+                        style={{ maxWidth: "100%" }}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+
               {!editingHyperlinkId ? (
                 // Show Add Hyperlink form when no hyperlink is selected
                 <div>
@@ -835,19 +872,6 @@ const Portfolio = () => {
                   </div>
                 </div>
               )}
-              <>
-                <h3>Image Upload</h3>
-                <ImageUpload onImageUpload={handleImageUpload} />
-                {uploadedImageUrl && (
-                  <div className="uploaded-image">
-                    <img
-                      src={uploadedImageUrl}
-                      alt="Uploaded"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                )}
-              </>
             </div>
           )}
         </div>
